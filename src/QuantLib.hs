@@ -5,6 +5,7 @@ module QuantLib
         , module QuantLib.Position
         , module QuantLib.TimeSeries
         , module QuantLib.Prices
+        , module QuantLib.VolatilityModel
         )
         where
 
@@ -14,3 +15,4 @@ import QuantLib.Currencies
 import QuantLib.Position
 import QuantLib.TimeSeries
 import QuantLib.Prices
+import QuantLib.VolatilityModel

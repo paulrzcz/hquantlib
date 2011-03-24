@@ -3,6 +3,6 @@ module QuantLib.TimeSeries
         ) where
 
 import QuantLib.Time.Date
-import Data.Map
+import qualified Data.Map as M
 
-type TimeSeries m = Map Date m
+type TimeSeries m = M.Map Date m
