@@ -1,0 +1,29 @@
+name:           hquantlib
+version:        0.0.1
+license:        LGPL
+license-file:   LICENSE
+author:         Pavel Ryzhov
+maintainer:     Pavel Ryzhov <pavel.ryzhov@gmail.com>
+category:       Finance
+synopsis:       HQuantLib is a port of essencial parts of QuantLib to Haskell
+description:    HQuantLib is intended to be a functional style port of QuantLib (http://quantlib.org)
+build-type:     Simple
+stability:      experimental
+cabal-version:  >= 1.10.0
+
+library
+        default-language: Haskell2010
+        exposed-modules:
+                QuantLib
+                QuantLib.Time
+                QuantLib.Currencies
+                QuantLib.Stochastic
+        
+        build-depends:  base >= 4 && <5,
+                        containers >= 0.4.0.0,
+                        hmatrix >= 0.11.0.0,
+                        gsl-random >= 0.4.0
+
+        hs-source-dirs: src
+        ghc-options:    -Wall
+
