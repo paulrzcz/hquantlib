@@ -4,6 +4,7 @@ module QuantLib.Currencies.America
 
 import QuantLib.Currency
 
+-- | Canadian dollar
 cad :: Currency
 cad = Currency {
         cName           = "Canadian dollar",
@@ -12,6 +13,7 @@ cad = Currency {
         cFracsPerUnit   = 100
         }
 
+-- | U.S. dollar
 usd :: Currency
 usd = Currency {
         cName           = "U.S. dollar",

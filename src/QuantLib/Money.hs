@@ -5,6 +5,7 @@ module QuantLib.Money
 import QuantLib.Currency
 import QuantLib.Currencies.Europe (eur)
 
+-- | Amount of cash. Please, note that currency conversion is not implemented yet.
 data Money = Money {
         mValue          :: Double,
         mCurrency       :: Currency

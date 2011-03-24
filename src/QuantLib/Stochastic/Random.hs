@@ -8,12 +8,14 @@ module QuantLib.Stochastic.Random
 import GSL.Random.Gen
 import Control.Monad
 
+-- | Box-Muller method
 data BoxMuller = BoxMuller {
         bmFirst         :: Bool,
         bmSecondValue   :: Double,
         bmRng           :: RNG
         }
 
+-- | Creates normally distributed generator
 createNormalGen :: RNG->BoxMuller
 createNormalGen r = BoxMuller {
         bmFirst         = True,
@@ -29,6 +31,7 @@ getRndList rnd n = do
                     (x, newRnd) <- ngGetNext r
                     return (xs++[x], newRnd)
 
+-- | Normally distributed generator
 class NormalGenerator a where
         ngGetNext :: a -> IO (Double, a)
 

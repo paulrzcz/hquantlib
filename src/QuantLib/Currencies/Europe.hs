@@ -4,6 +4,7 @@ module QuantLib.Currencies.Europe
 
 import QuantLib.Currency
 
+-- | Swiss france
 chf :: Currency
 chf = Currency {
         cName           = "Swiss franc",
@@ -12,6 +13,7 @@ chf = Currency {
         cFracsPerUnit   = 100
         }
 
+-- | Czech koruna
 czk :: Currency
 czk = Currency {
         cName           = "Czech koruna",
@@ -20,6 +22,7 @@ czk = Currency {
         cFracsPerUnit   = 100
         }
 
+-- | Danish krone
 dkk :: Currency
 dkk = Currency {
         cName           = "Danish krone",
@@ -28,6 +31,7 @@ dkk = Currency {
         cFracsPerUnit   = 100
         }
 
+-- | European Euro
 eur :: Currency
 eur = Currency {
         cName           = "European Euro",
@@ -36,6 +40,7 @@ eur = Currency {
         cFracsPerUnit   = 100
         }
 
+-- | British pound sterling
 gbp :: Currency
 gbp = Currency {
         cName           = "British pound sterling",

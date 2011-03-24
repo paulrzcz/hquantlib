@@ -4,10 +4,12 @@ module QuantLib.Stochastic.Discretize
         where
 
 import QuantLib.Stochastic.Process
-        
+
+-- | Euler discretization of stochastic processes
 data Euler = Euler { eDt :: Double }
         deriving (Show, Eq)
 
+-- | Euler end-point discretization of stochastic processes
 data EndEuler = EndEuler { eeDt :: Double }
         deriving (Show, Eq)
 
