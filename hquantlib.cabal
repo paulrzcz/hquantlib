@@ -31,7 +31,8 @@ library
                 QuantLib.Currencies
                 QuantLib.Stochastic
         
-        build-depends:  base >= 4 && <5,
+        build-depends:  
+                        haskell2010 == 1.0.0.0,
                         containers >= 0.4.0.0,
                         hmatrix >= 0.11.0.0,
                         gsl-random >= 0.4.0

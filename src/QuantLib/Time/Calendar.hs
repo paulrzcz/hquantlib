@@ -18,9 +18,9 @@ module QuantLib.Time.Calendar
         ( module QuantLib.Time.Calendar
         ) where
 
-import Array
+import Data.Array
 import QuantLib.Time.Date
-import QuantLib.Time.BusinessDayConvention
+import QuantLib.Time.BusinessDayConvention()
 
 data Calendar = Calendar
                     {
@@ -41,7 +41,12 @@ data CalendarImpl = CalendarImpl
                         calImplIsWeekend :: DayName -> Bool
                     }
 
+
+westernCalendarImpl ::  CalendarImpl
 westernCalendarImpl = CalendarImpl isWesternEaster getWesternEasterMonday isOrthodoxWeekend
+
+
+orthodoxCalendarImpl ::  CalendarImpl
 orthodoxCalendarImpl = CalendarImpl isOrthodoxEaster getOrthodoxEasterMonday isOrthodoxWeekend
 
 -- | Is the given day in the year an Easter Monday according to the Western Calendar?
