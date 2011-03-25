@@ -15,3 +15,5 @@ instance Instrument Stock where
        iErrorEstimate _ = 0.0
        iDate            = sDate
        iIsExpired     _ = False
+
+data Option = PutOption | CallOption

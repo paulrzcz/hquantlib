@@ -8,13 +8,19 @@ category:       Finance
 synopsis:       HQuantLib is a port of essencial parts of QuantLib to Haskell
 description:    HQuantLib is intended to be a functional style port of QuantLib (http://quantlib.org)
 build-type:     Simple
-stability:      experimental
+stability:      alpha
+homepage:       http://code.google.com/p/hquantlib/
 cabal-version:  >= 1.10.0
+
+source-repository head
+        type:           hg
+        location:       https://hquantlib.googlecode.com/hg/
 
 library
         default-language: Haskell2010
         exposed-modules:
                 QuantLib
+                QuantLib.Event
                 QuantLib.Time
                 QuantLib.Instruments
                 QuantLib.Currencies
