@@ -120,7 +120,15 @@ weekday :: Date -> Int
 weekday (Date _ _ _ serial)
     = let dayno = serial `mod` 7
       in if dayno == 0 then 7 else dayno
-      
+
+data DayName = Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday
+        deriving (Show, Ord, Enum, Eq)
+
+{- | Maps from date to week days. Seems not to be implemented in orginal library -}
+getweekdayname :: Date->DayName
+getweekdayname = toEnum . weekday
+
+
 -- month functions
               
 monthLength:: Month -> Bool -> Int
