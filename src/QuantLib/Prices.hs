@@ -6,6 +6,12 @@ module QuantLib.Prices
 data PriceType = Bid | Ask | Last | Close | Mid | MidEq | MidSafe
         deriving (Show, Eq)
 
+data CallPrice = DirtyPrice {
+        cpPrice         :: Double
+        } | CleanPrice {
+        cpPrice         :: Double
+        } deriving (Show, Eq, Ord)
+
 -- | Interval price
 data IntervalPrice = IntervalPrice {
         ipOpen  :: Double,
