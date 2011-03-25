@@ -3,11 +3,11 @@ module QuantLib.Instruments.Stock
         ) where
 
 import QuantLib.Instruments.Instrument
-import QuantLib.Time.Date
+import Data.Time.LocalTime
 
 data Stock = Stock {
         sQuote  :: Double,
-        sDate   :: Date
+        sDate   :: LocalTime
         } deriving (Show)
 
 instance Instrument Stock where
