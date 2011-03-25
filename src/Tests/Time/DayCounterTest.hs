@@ -1,7 +1,9 @@
-module Tests.DayCounterTest(module Tests.DayCounterTest) where
+module Tests.Time.DayCounterTest
+        ( module Tests.Time.DayCounterTest
+        ) where
 
-import Date
-import DayCounter
+import QuantLib.Time.Date
+import QuantLib.Time.DayCounter
 import Test.HUnit
 
 daycountertests = TestList [TestLabel "Daycounter test1" daycounter_test1,
@@ -17,9 +19,9 @@ daycounter_test2 = TestCase (assertBool "actual365fixed year fraction" (expected
 
 -- test data
 
-testdate1 = makeDate 02 07 2010
-testdate2 = makeDate 10 07 2010
-testdate3 = makeDate 19 07 2010
-testdate4 = makeDate 02 08 2010
+-- testdate1 = makeDate 02 07 2010
+-- testdate2 = makeDate 10 07 2010
+-- testdate3 = makeDate 19 07 2010
+-- testdate4 = makeDate 02 08 2010
 
 -- test 1

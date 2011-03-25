@@ -1,5 +1,5 @@
-module Tests.CalendarTest
-        ( module Tests.CalendarTest
+module Tests.Time.CalendarTest
+        ( module Tests.Time.CalendarTest
         ) where
 
 import QuantLib.Time.Date
