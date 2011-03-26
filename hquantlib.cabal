@@ -1,5 +1,5 @@
 name:           hquantlib
-version:        0.0.1.1
+version:        0.0.1.2
 license:        LGPL
 license-file:   LICENSE
 author:         Pavel Ryzhov
@@ -35,13 +35,19 @@ library
                 QuantLib.VolatilityModel
                 QuantLib.TimeSeries
                 QuantLib.Money
+                QuantLib.Prices
                 QuantLib.Position
+                QuantLib.Options
         
         other-modules:
                 QuantLib.Currencies.America
                 QuantLib.Currencies.Europe
                 QuantLib.Instruments.Instrument
                 QuantLib.Instruments.Stock
+                QuantLib.Stochastic.Discretize
+                QuantLib.Stochastic.Process
+                QuantLib.Stochastic.Random
+                QuantLib.Currency
         
         build-depends:  
                         haskell2010 == 1.0.0.0,
