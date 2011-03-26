@@ -1,18 +1,14 @@
 module QuantLib
         ( module QuantLib.Stochastic
         , module QuantLib.Money
-        , module QuantLib.Currencies
         , module QuantLib.Position
         , module QuantLib.TimeSeries
         , module QuantLib.Prices
-        , module QuantLib.VolatilityModel
         )
         where
 
 import QuantLib.Stochastic
 import QuantLib.Money
-import QuantLib.Currencies
 import QuantLib.Position
 import QuantLib.TimeSeries
 import QuantLib.Prices
-import QuantLib.VolatilityModel

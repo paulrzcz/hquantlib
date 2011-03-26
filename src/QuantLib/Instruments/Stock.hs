@@ -5,6 +5,7 @@ module QuantLib.Instruments.Stock
 import QuantLib.Instruments.Instrument
 import Data.Time.LocalTime
 
+-- | Single stock instrument 
 data Stock = Stock {
         sQuote  :: Double,
         sDate   :: LocalTime
@@ -16,4 +17,3 @@ instance Instrument Stock where
        iDate            = sDate
        iIsExpired     _ = False
 
-data Option = PutOption | CallOption

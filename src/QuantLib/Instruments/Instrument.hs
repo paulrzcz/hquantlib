@@ -5,6 +5,7 @@ module QuantLib.Instruments.Instrument
 import Data.Time.LocalTime
 import qualified Data.Map as M
 
+-- | Instrument type class
 class Instrument a where
         iNPV            :: a->Double
         iErrorEstimate  :: a->Double
@@ -17,6 +18,6 @@ data Instrument a => CompositeInstrument a = CompositeInstrument (M.Map a Double
 
 instance Instrument a => Instrument (CompositeInstrument a) where
         iNPV (CompositeInstrument xs)   = M.foldrWithKey (\k x y -> y + (iNPV k)*x) 0.0 xs
-        iErrorEstimate x                = 0.0
+        iErrorEstimate _                = 0.0
         iDate (CompositeInstrument xs)  = (iDate . head . M.keys) xs
         iIsExpired (CompositeInstrument xs) = (any iIsExpired . M.keys) xs

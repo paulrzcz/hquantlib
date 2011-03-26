@@ -23,6 +23,7 @@ createNormalGen r = BoxMuller {
         bmRng           = r
         }
 
+-- | Generates a list of normally distributed number using generator
 getRndList :: NormalGenerator a => a->Int->IO ([Double], a)
 getRndList rnd n = do
         let ns = replicate n (1 :: Int)
