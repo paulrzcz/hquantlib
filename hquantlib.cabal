@@ -26,7 +26,6 @@ library
         exposed-modules:
                 QuantLib
                 QuantLib.Event
-                QuantLib.Time
                 QuantLib.Instruments
                 QuantLib.Currencies
                 QuantLib.Stochastic
