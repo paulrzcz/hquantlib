@@ -1,5 +1,5 @@
 name:           hquantlib
-version:        0.0.2
+version:        0.0.1.1
 license:        LGPL
 license-file:   LICENSE
 author:         Pavel Ryzhov
@@ -40,6 +40,8 @@ library
         other-modules:
                 QuantLib.Currencies.America
                 QuantLib.Currencies.Europe
+                QuantLib.Instruments.Instrument
+                QuantLib.Instruments.Stock
         
         build-depends:  
                         haskell2010 == 1.0.0.0,

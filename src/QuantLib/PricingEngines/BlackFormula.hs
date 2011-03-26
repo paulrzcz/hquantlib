@@ -16,14 +16,14 @@ blackFormulaImpliedStdDev opType strike forward blackPrice discount displacement
         | displacement < 0.0    = Nothing
         | otherwise             = Just stdDev
         where
-                realGuess       = fromMaybe apprGuess guess
-                apprGuess       = blackFormulaImpliedStdDevApproximation opType strike forward blackPrice discount displacement
-                blackFunction   = undefined
-                ([stdDev], _)   = root DNewton accuracy maxIter blackFunction [realGuess]
+                realGuess               = fromMaybe apprGuess guess
+                apprGuess               = blackFormulaImpliedStdDevApproximation opType strike forward blackPrice discount displacement
+                blackFunction           = blackImpliedStdDevHelper opType strike forward blackPrice displacement
+                ([stdDev], _)           = root DNewton accuracy maxIter blackFunction [realGuess]
 
-blackImpliedStdDevHelper :: OptionType-> Double-> Double-> Double-> Double-> [Double]-> Double
+blackImpliedStdDevHelper :: OptionType-> Double-> Double-> Double-> Double-> [Double]-> [Double]
 blackImpliedStdDevHelper opType strike forward blackPrice displacement [x] =
-        (max 0.0 result) - blackPrice
+        [(max 0.0 result) - blackPrice]
         where   result = signedForward * (cdf signedD1) - signedStrike * (cdf signedD2)
                 signedD1 = d + temp
                 signedD2 = d - temp
@@ -34,6 +34,7 @@ blackImpliedStdDevHelper opType strike forward blackPrice displacement [x] =
                 signedForward = intOpType*(forward+displacement)
                 signedStrike  = intOpType*(strike +displacement)
 
+blackImpliedStdDevHelper _ _ _ _ _ _ = undefined
 
 cdf ::  Double -> Double
 cdf x = 0.5 * (1 + erf (x/(sqrt 2)))
