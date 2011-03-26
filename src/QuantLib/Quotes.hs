@@ -47,11 +47,29 @@ data ImpliedStdDevQuote a = ImpliedStdDevQuote {
         isdqForward     :: a,
         isdqPrice       :: a,
         isdqStrike      :: Double,
-        isdqGuess       :: Double,
-        isdqAccuracy    :: Double,
-        isdqMaxIter     :: Integer
+        isdqGuess       :: Maybe Double
         } deriving (Show)
 
 instance Quote a => Quote (ImpliedStdDevQuote a) where
-        qValue (ImpliedStdDevQuote opType fwd price strike guess acc maxiter) 
-                = blackFormulaImpliedStdDev opType (pureValue fwd) (pureValue price) strike 1.0 0.0 guess acc maxiter
+        qValue (ImpliedStdDevQuote opType fwd price strike guess) 
+                = blackFormulaImpliedStdDev opType (pureValue fwd) (pureValue price) strike 1.0 0.0 guess 1.0e-6 100
+
+-- | Quote for the Eurodollar-future implied standard deviation
+data EurodollarFutureQuote a = EurodollarFutureQuote {
+        efqForward      :: a,
+        efqCallPrice    :: a,
+        efqPutPrice     :: a,
+        efqStrike       :: Double,
+        efqGuess        :: Maybe Double
+        } deriving (Show)
+
+instance Quote a => Quote (EurodollarFutureQuote a) where
+        qValue (EurodollarFutureQuote forward callPrice putPrice strike guess)
+                | strike > forwardValue = blackFormulaImpliedStdDev Call strike forwardValue putValue 1.0 0.0 guess 1.0e-6 100
+                | otherwise     = blackFormulaImpliedStdDev Put strike forwardValue callValue 1.0 0.0 guess 1.0e-6 100
+                where
+                        forwardValue = 100.0 - (fromMaybe 0.0 (qValue forward))
+                        putValue     = fromMaybe 0.0 (qValue putPrice)
+                        callValue    = fromMaybe 0.0 (qValue callPrice)
+
+
