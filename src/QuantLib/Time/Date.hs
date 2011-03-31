@@ -30,11 +30,24 @@ class Holiday m where
         isBusinessDay :: m->Date->Bool
         isBusinessDay m d = not (isHoliday m $ toGregorian d)
 
+        hBusinessDayBetween :: m->(Date, Date)->Int
+        hBusinessDayBetween m (fd, td) = foldl countDays 0 listOfDates
+                where   countDays counter x     = counter + (fromEnum $ isBusinessDay m x)
+                        listOfDates             = getDaysBetween (fd, td)
+
 -- | Gets a week day 
 getWeekDay :: Date->WeekDay
 getWeekDay d   = toEnum (weekDay - 1)
         where   (_, _, weekDay) = toWeekDate d
 
+getDaysBetween ::  (Day, Day) -> [Day]
+getDaysBetween (fd, td) = generator fd []
+        where   generator date x
+                        | date < td     = generator nextDate (x++[nextDate])
+                        | otherwise     = x
+                        where   nextDate        = addDays 1 date
+
+-- | Checks if the day is a weekend, i.e. Saturday or Sunday
 isWeekEnd :: Date->Bool
 isWeekEnd d     = (weekday == Saturday) || (weekday == Sunday)
         where   weekday = getWeekDay d

@@ -1,5 +1,5 @@
-module QuantLib.Cashflows.CashflowFunction
-        ( module QuantLib.Cashflows.CashflowFunction
+module QuantLib.Cashflows.CashflowFunctions
+        ( module QuantLib.Cashflows.CashflowFunctions
         ) where
 
 import Data.List
