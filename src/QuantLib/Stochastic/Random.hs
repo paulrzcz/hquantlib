@@ -49,11 +49,13 @@ instance NormalGenerator BoxMuller where
                 where   getRs = do
                                 x1 <- getUniformPos rng
                                 x2 <- getUniformPos rng
-                                let r = x1*x1 + x2*x2
+                                let s1 = 2.0*x1-1.0
+                                let s2 = 2.0*x2-1.0
+                                let r = s1*s1 + s2*s2
                                 if (r>=1.0 || r<=0.0) then
                                         getRs
                                 else
-                                        return (r, x1, x2)
+                                        return (r, s1, s2)
                         
         ngGetNext (BoxMuller False s r) = do
                 return (s, BoxMuller True s r)
