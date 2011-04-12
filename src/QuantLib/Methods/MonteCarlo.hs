@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, BangPatterns #-}
 module QuantLib.Methods.MonteCarlo
         ( module QuantLib.Methods.MonteCarlo
         ) where
@@ -26,9 +26,11 @@ class PathPricer m where
 -- | Monte Carlo engine function
 monteCarlo :: (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
 monteCarlo (PathMonteCarlo s p g) size = do
-        liftM (sSummarize s) priced
-        where   paths   = map (\_ -> pgGenerate g) [1..size]
-                priced  = mapM (liftM (ppPrice p)) paths
+        priced <- mapM (\_ -> pricing) [1..size]
+        return $ sSummarize s priced
+        where   pricing = do
+                        !path <- pgGenerate g
+                        return $! ppPrice p path
 
 -- | Path-dependant Monte Carlo engine
 data (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g

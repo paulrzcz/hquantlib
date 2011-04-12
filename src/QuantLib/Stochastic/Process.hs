@@ -1,9 +1,10 @@
-
+{-# LANGUAGE BangPatterns #-}
 module QuantLib.Stochastic.Process
         ( module QuantLib.Stochastic.Process )
         where
 
 import Control.Monad (foldM)
+import Data.List (foldl')
 import QuantLib.Stochastic.Random (NormalGenerator (..))
 
 -- | Discretization of stochastic process over given interval
@@ -31,13 +32,14 @@ type Path = [Dot]
 -- | Generates sample path for given stochastic process under discretization and normal generator for given amount of steps, starting from x0
 generatePath :: (StochasticProcess a, NormalGenerator b, Discretize c) => b->c->a->Int->Dot->IO Path
 generatePath rnd discr sp steps x0 = do
-        let s    = replicate steps (1 :: Int)
-        (path, _) <- foldM intGenPath ([x0], rnd) s
-        return path
-        where   intGenPath (p, r) _ = do
-                        (dw, newRnd) <- ngGetNext r
-                        let newDot = evolve discr sp (last p) dw
-                        return (p ++ [newDot], newRnd)
+        (!list, !newRnd) <- foldM generator ([], rnd) [1..steps]
+        let path = foldl' evolver [x0] list
+        return $! reverse path
+        where   evolver p dw = (evolve discr sp (head p) dw) : p
+                generator (list, r) _ = do
+                        (p, newRnd) <- ngGetNext r
+                        return (p:list, newRnd)
+
 
 -- | Geometric Brownian motion
 data GeometricBrownian = GeometricBrownian { 

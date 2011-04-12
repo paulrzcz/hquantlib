@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 module QuantLib.Stochastic.Random
         ( BoxMuller
         , createNormalGen
@@ -27,10 +28,11 @@ createNormalGen r = BoxMuller {
 getRndList :: NormalGenerator a => a->Int->IO ([Double], a)
 getRndList rnd n = do
         let ns = replicate n (1 :: Int)
-        foldM foldFunc ([], rnd) ns
+        (list, r) <- foldM foldFunc ([], rnd) ns
+        return (reverse list, r)
         where   foldFunc (xs, r) _ = do
                     (x, newRnd) <- ngGetNext r
-                    return (xs++[x], newRnd)
+                    return (x:xs, newRnd)
 
 -- | Normally distributed generator
 class NormalGenerator a where
@@ -39,13 +41,13 @@ class NormalGenerator a where
 instance NormalGenerator BoxMuller where
         ngGetNext (BoxMuller True _ rng) = do
                 (r, s1, s2) <- getRs
-                let ratio = sqrt (-2.0*(log r)/r)
+                let !ratio = sqrt (-2.0*(log r)/r)
                 let bm = BoxMuller {
                         bmFirst         = False,
                         bmSecondValue   = s2*ratio,
                         bmRng           = rng
                         }
-                return (s1*ratio, bm)
+                return $! (s1*ratio, bm)
                 where   getRs = do
                                 x1 <- getUniformPos rng
                                 x2 <- getUniformPos rng
@@ -55,7 +57,7 @@ instance NormalGenerator BoxMuller where
                                 if (r>=1.0 || r<=0.0) then
                                         getRs
                                 else
-                                        return (r, s1, s2)
+                                        return $! (r, s1, s2)
                         
         ngGetNext (BoxMuller False s r) = do
-                return (s, BoxMuller True s r)
+                return $! (s, BoxMuller True s r)

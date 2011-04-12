@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances, BangPatterns #-}
 module Main where
 
 import Control.Monad
@@ -16,9 +16,9 @@ data MaxMinClosePricer = MMCP {
 
 instance PathPricer MaxMinClosePricer where
         ppPrice _ path = MMCP high low close
-                where   close   = last xs
-                        high    = maximum xs
-                        low     = minimum xs
+                where   !close   = last xs
+                        !high    = maximum xs
+                        !low     = minimum xs
                         xs      = map getX path
 
 data HistoSummary = HS (M.Map Double Int)
@@ -36,11 +36,13 @@ instance Summary HistoSummary MaxMinClosePricer where
 
 printMap :: HistoSummary->IO ()
 printMap (HS m) = do
-forM_ list printPlain
-where
-        printPlain (a, b) = do 
-                putStrLn $ (show a)++","++(show b)
-        list    = M.toList m
+        forM_ list printPlain
+        where
+                printPlain (a, b) = do 
+                        putStrLn $ (show a)++","++(show b)
+                list    = M.toList m
+
+getHsSize (HS m) = M.size m
 
 main :: IO ()
 main = do
@@ -53,5 +55,5 @@ main = do
         let generator=createNormalGen rng 
         let pg      = ProcessGenerator start 100 sp generator discrete
         let pmc     = PathMonteCarlo summary mmcp pg
-        s <- monteCarlo pmc 10000
-        printMap s 
+        s <- monteCarlo pmc 50000
+        putStrLn $ show $ getHsSize s 
