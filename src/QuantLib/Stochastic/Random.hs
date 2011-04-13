@@ -2,6 +2,7 @@
 module QuantLib.Stochastic.Random
         ( BoxMuller
         , createNormalGen
+        , mkNormalGen
         , NormalGenerator (..)
         , module GSL.Random.Gen
         ) where
@@ -15,6 +16,11 @@ data BoxMuller = BoxMuller {
         bmSecondValue   :: Double,
         bmRng           :: RNG
         }
+
+mkNormalGen ::  IO BoxMuller
+mkNormalGen = do
+        rng <- newRNG mt19937
+        return $! createNormalGen rng
 
 -- | Creates normally distributed generator
 createNormalGen :: RNG->BoxMuller
@@ -37,8 +43,10 @@ getRndList rnd n = do
 -- | Normally distributed generator
 class NormalGenerator a where
         ngGetNext :: a -> IO (Double, a)
+        ngMkNew   :: a -> IO a
 
 instance NormalGenerator BoxMuller where
+        ngMkNew _       = mkNormalGen
         ngGetNext (BoxMuller True _ rng) = do
                 (r, s1, s2) <- getRs
                 let !ratio = sqrt (-2.0*(log r)/r)

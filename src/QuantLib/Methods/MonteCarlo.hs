@@ -4,6 +4,7 @@ module QuantLib.Methods.MonteCarlo
         ) where
 
 import Control.Monad
+import Control.Concurrent.ParallelIO
 import Control.Parallel.Strategies
 import QuantLib.Stochastic.Process
 import QuantLib.Stochastic.Random
@@ -17,6 +18,7 @@ class PathPricer p => Summary m p | m->p where
 
 -- | Path generator is a stochastic path generator
 class PathGenerator m where
+        pgMkNew         :: m->IO m
         pgGenerate      :: m->IO Path
 
 -- | Path pricer provides a price for given path
@@ -30,7 +32,8 @@ monteCarlo (PathMonteCarlo s p g) size = do
         priced <- mapM (\_ -> pricing) [1..size]
         return $ sSummarize s priced
         where   pricing = do
-                        !path <- pgGenerate g
+                        rnd <- pgMkNew g
+                        !path <- pgGenerate rnd
                         return $! ppPrice p path
 
 monteCarloParallel :: (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
@@ -41,14 +44,13 @@ monteCarloParallel (PathMonteCarlo s p g) size = do
                         !path <- pgGenerate g
                         return $! ppPrice p path
 
-priced :: (PathGenerator m, PathPricer b, Num a, Enum a) =>b -> m -> a -> IO [b]
-priced p g size = mapM (\_ -> pricing) [1..size] `using` strat
+monteCarloParallel2 ::(Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
+monteCarloParallel2 (PathMonteCarlo s p g) size = do
+        priced <- parallel $ map (\_ -> pricing) [1..size]
+        return $ sSummarize s priced
         where   pricing = do
                         !path <- pgGenerate g
                         return $! ppPrice p path
-                strat   = rpar
-
-
 
 -- | Path-dependant Monte Carlo engine
 data (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g
@@ -75,5 +77,8 @@ data (StochasticProcess sp, NormalGenerator b, Discretize d) => ProcessGenerator
         }
 
 instance (StochasticProcess sp, NormalGenerator b, Discretize d) => PathGenerator (ProcessGenerator sp b d) where
+        pgMkNew (ProcessGenerator start len process rnd d)       = do
+                newRnd <- ngMkNew rnd
+                return $! ProcessGenerator start len process newRnd d
         pgGenerate (ProcessGenerator start len sp b d) = generatePath b d sp len start
 
