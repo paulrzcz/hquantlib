@@ -32,7 +32,7 @@ type Path = [Dot]
 -- | Generates sample path for given stochastic process under discretization and normal generator for given amount of steps, starting from x0
 generatePath :: (StochasticProcess a, NormalGenerator b, Discretize c) => b->c->a->Int->Dot->IO Path
 generatePath rnd discr sp steps x0 = do
-        (!list, !newRnd) <- foldM generator ([], rnd) [1..steps]
+        (!list, _) <- foldM generator ([], rnd) [1..steps]
         let path = foldl' evolver [x0] list
         return $! reverse path
         where   evolver p dw = (evolve discr sp (head p) dw) : p

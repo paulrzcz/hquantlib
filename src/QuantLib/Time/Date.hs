@@ -3,7 +3,6 @@ module QuantLib.Time.Date
         ) where
 
 import Data.Time
-import Data.Time.Calendar
 import Data.Time.Calendar.WeekDate
 
 {- | Business Day conventions
@@ -40,10 +39,11 @@ getWeekDay :: Date->WeekDay
 getWeekDay d   = toEnum (weekDay - 1)
         where   (_, _, weekDay) = toWeekDate d
 
+-- | Generate a list of all dates inbetween
 getDaysBetween ::  (Day, Day) -> [Day]
-getDaysBetween (fd, td) = generator fd []
+getDaysBetween (fd, td) = reverse $ generator fd []
         where   generator date x
-                        | date < td     = generator nextDate (x++[nextDate])
+                        | date < td     = generator nextDate (nextDate : x)
                         | otherwise     = x
                         where   nextDate        = addDays 1 date
 
