@@ -59,7 +59,8 @@ library
                         containers >= 0.4.0.0,
                         hmatrix >= 0.11.0.0,
                         hmatrix-special >= 0.1.1,
-                        gsl-random >= 0.4.0
+                        gsl-random >= 0.4.0,
+                        parallel   >= 3.1.0.0
 
         hs-source-dirs: src
         ghc-options:    -Wall

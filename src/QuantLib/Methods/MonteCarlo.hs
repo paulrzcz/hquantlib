@@ -4,6 +4,7 @@ module QuantLib.Methods.MonteCarlo
         ) where
 
 import Control.Monad
+import Control.Parallel.Strategies
 import QuantLib.Stochastic.Process
 import QuantLib.Stochastic.Random
 
@@ -31,6 +32,23 @@ monteCarlo (PathMonteCarlo s p g) size = do
         where   pricing = do
                         !path <- pgGenerate g
                         return $! ppPrice p path
+
+monteCarloParallel :: (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
+monteCarloParallel (PathMonteCarlo s p g) size = do
+        priced <- mapM (\_ -> pricing) [1..size] `using` rpar
+        return $ sSummarize s priced
+        where   pricing = do
+                        !path <- pgGenerate g
+                        return $! ppPrice p path
+
+priced :: (PathGenerator m, PathPricer b, Num a, Enum a) =>b -> m -> a -> IO [b]
+priced p g size = mapM (\_ -> pricing) [1..size] `using` strat
+        where   pricing = do
+                        !path <- pgGenerate g
+                        return $! ppPrice p path
+                strat   = rpar
+
+
 
 -- | Path-dependant Monte Carlo engine
 data (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g

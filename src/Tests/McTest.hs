@@ -55,5 +55,5 @@ main = do
         let generator=createNormalGen rng 
         let pg      = ProcessGenerator start 100 sp generator discrete
         let pmc     = PathMonteCarlo summary mmcp pg
-        s <- monteCarlo pmc 50000
+        s <- monteCarloParallel pmc 50000
         putStrLn $ show $ getHsSize s 
