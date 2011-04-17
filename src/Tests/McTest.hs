@@ -26,8 +26,8 @@ data HistoSummary = HS (M.Map Double Int)
 
 addOnePath :: HistoSummary->MaxMinClosePricer->HistoSummary
 addOnePath (HS m) (MMCP _ _ close) = HS newM
-        where   (_, newM) = M.insertLookupWithKey inserter roundedClose 1 m
-                roundedClose =  ((fromIntegral . round) (close*10000))/10000
+        where   (_, !newM) = M.insertLookupWithKey inserter roundedClose 1 m
+                !roundedClose =  ((fromIntegral . round) (close*10000))/10000
                 inserter _ new_value old_value = old_value+new_value
 
 instance Summary HistoSummary MaxMinClosePricer where
@@ -51,9 +51,8 @@ main = do
         let start   = Dot 0.0 1.0
         let sp      = GeometricBrownian 0.0 1.0
         let discrete= Euler 0.01
-        rng <- newRNG mt19937
-        let generator=createNormalGen rng 
-        let pg      = ProcessGenerator start 100 sp generator discrete
+        rng <- mkNormalGen
+        let pg      = ProcessGenerator start 100 sp rng discrete
         let pmc     = PathMonteCarlo summary mmcp pg
-        s <- monteCarloParallel pmc 50000
+        s <- monteCarlo pmc 100000
         putStrLn $ show $ getHsSize s 

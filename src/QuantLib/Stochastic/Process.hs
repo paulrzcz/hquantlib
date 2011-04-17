@@ -19,11 +19,11 @@ class StochasticProcess a where
         diff   :: a->Dot->Double
         evolve :: Discretize b=> b->a->Dot->Double->Dot
         evolve discr p dot dw = Dot newT newX
-                where   newT = ((+) (getT dot) (dDt p discr dot))
-                        newX = (getX dot) + (dDrift p discr dot) + (dDiff p discr dot)*dw
+                where   !newT = ((+) (getT dot) (dDt p discr dot))
+                        !newX = (getX dot) + (dDrift p discr dot) + (dDiff p discr dot)*dw
  
 -- | Dot. t and x pair
-data Dot = Dot { getT :: Double, getX :: Double }
+data Dot = Dot { getT :: {-# UNPACK #-} !Double, getX :: {-# UNPACK #-} !Double }
         deriving (Show, Eq)
 
 -- | Path as list of Dots
@@ -33,11 +33,11 @@ type Path = [Dot]
 generatePath :: (StochasticProcess a, NormalGenerator b, Discretize c) => b->c->a->Int->Dot->IO Path
 generatePath rnd discr sp steps x0 = do
         (!list, _) <- foldM generator ([], rnd) [1..steps]
-        let path = foldl' evolver [x0] list
+        let !path = foldl' evolver [x0] list
         return $! reverse path
         where   evolver p dw = (evolve discr sp (head p) dw) : p
                 generator (list, r) _ = do
-                        (p, newRnd) <- ngGetNext r
+                        (!p, newRnd) <- ngGetNext r
                         return (p:list, newRnd)
 
 
