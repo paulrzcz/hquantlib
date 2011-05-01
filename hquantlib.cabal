@@ -36,6 +36,7 @@ library
                 QuantLib.Time
                 QuantLib.TimeSeries
                 QuantLib.Money
+                QuantLib.Math
                 QuantLib.Prices
                 QuantLib.Position
                 QuantLib.Options
@@ -52,6 +53,7 @@ library
                 QuantLib.Currency
                 QuantLib.Time.Date
                 QuantLib.Time.DayCounter
+                QuantLib.Math.InverseNormal
         
         build-depends:  
                         haskell2010     == 1.0.0.0,
