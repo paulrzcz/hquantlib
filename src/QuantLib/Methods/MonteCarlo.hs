@@ -31,8 +31,7 @@ monteCarlo (PathMonteCarlo s p g) size = do
         priced <- mapM (\_ -> pricing) [1..size]
         return $ sSummarize s priced
         where   pricing = do
-                        rnd <- pgMkNew g
-                        !path <- pgGenerate rnd
+                        !path <- pgGenerate g
                         return $! ppPrice p path
 
 -- | Monte Carlo engine function. Parallelized version

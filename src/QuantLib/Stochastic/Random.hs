@@ -4,9 +4,12 @@ module QuantLib.Stochastic.Random
         , createNormalGen
         , mkNormalGen
         , NormalGenerator (..)
+        , InverseNormal
+        , mkInverseNormal
         ) where
 
 import GSL.Random.Gen
+import QuantLib.Math.InverseNormal
 
 -- | Box-Muller method
 data BoxMuller = BoxMuller {
@@ -57,3 +60,16 @@ instance NormalGenerator BoxMuller where
                         
         ngGetNext (BoxMuller False !s !r) = do
                 return $! (s, BoxMuller True s r)
+
+-- | Normal number generation using inverse cummulative normal distribution
+data InverseNormal = InverseNormal RNG
+
+mkInverseNormal = do
+        rng <- newRNG mt19937
+        return $! InverseNormal rng
+        
+instance NormalGenerator InverseNormal where
+        ngMkNew _       = mkInverseNormal
+        ngGetNext gen@(InverseNormal rng)   = do
+                x <- getUniformPos rng
+                return $! (inverseNormal x, gen)

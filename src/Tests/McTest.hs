@@ -49,10 +49,11 @@ main = do
         let summary = HS M.empty
         let mmcp    = MMCP 0.0 0.0 0.0
         let start   = Dot 0.0 1.0
-        let sp      = GeometricBrownian 0.0 1.0
+        let sp      = GeometricBrownian 0.0 0.005
         let discrete= Euler 0.01
-        rng <- mkNormalGen
+        rng <- mkInverseNormal
         let pg      = ProcessGenerator start 100 sp rng discrete
         let pmc     = PathMonteCarlo summary mmcp pg
-        s <- monteCarlo pmc 100000
+        s <- monteCarlo pmc 50000
+        printMap s
         putStrLn $ show $ getHsSize s 
