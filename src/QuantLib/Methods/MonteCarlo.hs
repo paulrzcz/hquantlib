@@ -4,6 +4,7 @@ module QuantLib.Methods.MonteCarlo
         ) where
 
 import Control.Monad()
+import Control.Monad.MC
 import Control.Parallel.Strategies
 import QuantLib.Stochastic.Process
 import QuantLib.Stochastic.Random

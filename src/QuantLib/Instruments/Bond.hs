@@ -15,6 +15,7 @@ class Bond b where
         bbIssueDate              :: b->Date
         bbCoupons                :: b->Leg
         bbMaturityDate           :: b->Date
+        bbMaturityDate b = (cfDate . last . bbCoupons) b 
         -- | Theoretical bond yield
         bbYield                  :: b->Double
         -- | Theoretical clean price
@@ -22,4 +23,23 @@ class Bond b where
         -- | Theoretical dirty price
         bbDirtyPrice             :: b->Double
 
+data SimpleBond = SimpleBond {
+        sbSettlementDays :: Int,
+        sbIssueDate      :: Date,
+        sbCoupons        :: Leg
+        } deriving (Show)
 
+instance Bond SimpleBond where
+       bbSettlementDays b = sbSettlementDays b
+       bbIssueDate      b = sbIssueDate b
+       bbCoupons        b = sbCoupons b
+
+       bbYield         _ = 0.0
+       bbCleanPrice    _ = 0.0
+       bbDirtyPrice    _ = 0.0
+
+instance Instrument SimpleBond where
+        iNPV (SimpleBond sd id c)               = undefined
+        iErrorEstimate (SimpleBond sd id c)     = undefined
+        iDate (SimpleBond sd id c)              = undefined
+        iIsExpired (SimpleBond sd id c)         = undefined
