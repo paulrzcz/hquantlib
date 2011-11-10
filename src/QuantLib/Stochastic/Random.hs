@@ -40,7 +40,7 @@ instance NormalGenerator BoxMuller where
         ngMkNew _       = mkNormalGen
         ngGetNext (BoxMuller True _ rng) = do
                 (!r, !s1, !s2) <- getRs
-                let !ratio = sqrt (-2.0*(log r)/r)
+                let !ratio = sqrt (-2.0 * log r / r)
                 let !bm = BoxMuller {
                         bmFirst         = False,
                         bmSecondValue   = s2*ratio,
@@ -53,13 +53,9 @@ instance NormalGenerator BoxMuller where
                                 let !s1 = 2.0*x1-1.0
                                 let !s2 = 2.0*x2-1.0
                                 let !r = s1*s1 + s2*s2
-                                if (r>=1.0 || r<=0.0) then
-                                        getRs
-                                else
-                                        return $! (r, s1, s2)
+                                if r>=1.0 || r<=0.0 then getRs else return $! (r, s1, s2)
                         
-        ngGetNext (BoxMuller False !s !r) = do
-                return $! (s, BoxMuller True s r)
+        ngGetNext (BoxMuller False !s !r) = return $! (s, BoxMuller True s r)
 
 -- | Normal number generation using inverse cummulative normal distribution
 data InverseNormal = InverseNormal RNG

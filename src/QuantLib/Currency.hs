@@ -17,4 +17,4 @@ data Currency = Currency {
         } deriving (Eq)
 
 instance Show Currency where
-        showsPrec _ x s = (cCode x)++s
+        showsPrec _ x s = cCode x ++ s

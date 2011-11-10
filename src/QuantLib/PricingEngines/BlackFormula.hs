@@ -23,8 +23,8 @@ blackFormulaImpliedStdDev opType strike forward blackPrice discount displacement
 
 blackImpliedStdDevHelper :: OptionType-> Double-> Double-> Double-> Double-> [Double]-> [Double]
 blackImpliedStdDevHelper opType strike forward blackPrice displacement [x] =
-        [(max 0.0 result) - blackPrice]
-        where   result = signedForward * (cdf signedD1) - signedStrike * (cdf signedD2)
+        [max 0.0 result - blackPrice]
+        where   result = signedForward * cdf signedD1 - signedStrike * cdf signedD2
                 signedD1 = d + temp
                 signedD2 = d - temp
                 d        = signedMoneyness/x
@@ -37,7 +37,7 @@ blackImpliedStdDevHelper opType strike forward blackPrice displacement [x] =
 blackImpliedStdDevHelper _ _ _ _ _ _ = undefined
 
 cdf ::  Double -> Double
-cdf x = 0.5 * (1 + erf (x/(sqrt 2)))
+cdf x = 0.5 * (1 + erf (x / sqrt 2))
 
 blackFormulaImpliedStdDevApproximation :: OptionType-> Double-> Double-> Double-> Double-> Double-> Double
 blackFormulaImpliedStdDevApproximation opType strike forward blackPrice discount displacement

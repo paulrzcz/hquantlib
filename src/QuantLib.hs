@@ -1,14 +1,7 @@
-module QuantLib
-        ( module QuantLib.Stochastic
-        , module QuantLib.Money
-        , module QuantLib.Position
-        , module QuantLib.TimeSeries
-        , module QuantLib.Prices
-        )
-        where
+module QuantLib ( module Q ) where
 
-import QuantLib.Stochastic
-import QuantLib.Money
-import QuantLib.Position
-import QuantLib.TimeSeries
-import QuantLib.Prices
+import QuantLib.Stochastic as Q
+import QuantLib.Money as Q
+import QuantLib.Position as Q
+import QuantLib.TimeSeries as Q
+import QuantLib.Prices as Q

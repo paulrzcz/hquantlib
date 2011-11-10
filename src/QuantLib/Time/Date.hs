@@ -31,7 +31,7 @@ class Holiday m where
 
         hBusinessDayBetween :: m->(Date, Date)->Int
         hBusinessDayBetween m (fd, td) = foldl countDays 0 listOfDates
-                where   countDays counter x     = counter + (fromEnum $ isBusinessDay m x)
+                where   countDays counter x     = counter + fromEnum (isBusinessDay m x)
                         listOfDates             = getDaysBetween (fd, td)
 
 -- | Gets a week day 

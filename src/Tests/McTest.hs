@@ -27,19 +27,17 @@ data HistoSummary = HS (M.Map Double Int)
 addOnePath :: HistoSummary->MaxMinClosePricer->HistoSummary
 addOnePath (HS m) (MMCP _ _ close) = HS newM
         where   (_, !newM) = M.insertLookupWithKey inserter roundedClose 1 m
-                !roundedClose =  ((fromIntegral . round) (close*10000))/10000
+                !roundedClose =  (fromIntegral . round) (close*10000)/10000
                 inserter _ new_value old_value = old_value+new_value
 
 instance Summary HistoSummary MaxMinClosePricer where
-        sNorm _ _ = 0.0 -- we don't care about convergence now
-        sSummarize m paths = foldl' addOnePath m paths  
+        sNorm _ _ 	= 0.0 -- we don't care about convergence now
+        sSummarize 	= foldl' addOnePath  
 
 printMap :: HistoSummary->IO ()
-printMap (HS m) = do
-        forM_ list printPlain
+printMap (HS m) = forM_ list printPlain
         where
-                printPlain (a, b) = do 
-                        putStrLn $ (show a)++","++(show b)
+                printPlain (a, b) = putStrLn $ show a ++ "," ++ show b
                 list    = M.toList m
 
 getHsSize (HS m) = M.size m
@@ -56,4 +54,4 @@ main = do
         let pmc     = PathMonteCarlo summary mmcp pg
         s <- monteCarlo pmc 50000
         printMap s
-        putStrLn $ show $ getHsSize s 
+        print (getHsSize s)

@@ -8,19 +8,19 @@ import QuantLib.Time.Date
 class Event a where
         evDate          :: a->Date
         evOccured       :: a->Date->Bool
-        evOccured event date = (evDate event) < date
+        evOccured event date = evDate event < date
 
         evOccuredInclude:: a->Date->Bool
-        evOccuredInclude event date = (evDate event) <= date
+        evOccuredInclude event date = evDate event <= date
 
         evCompare :: a->a->Ordering
         evCompare x y     
-                | (evDate x) == (evDate y)      = EQ
-                | (evDate x) <= (evDate y)      = LT
+                | evDate x == evDate y 		= EQ
+                | evDate x <= evDate y      	= LT
                 | otherwise                     = GT
 
         evEqual :: a->a->Bool
-        evEqual x y = (evDate x) == (evDate y)
+        evEqual x y = evDate x == evDate y
 
 -- | Cash flows data type
 data CashFlow = CashFlow {

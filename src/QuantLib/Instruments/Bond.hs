@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
 module QuantLib.Instruments.Bond
         ( module QuantLib.Instruments.Bond
         ) where
@@ -15,7 +15,7 @@ class Bond b where
         bbIssueDate              :: b->Date
         bbCoupons                :: b->Leg
         bbMaturityDate           :: b->Date
-        bbMaturityDate b = (cfDate . last . bbCoupons) b 
+        bbMaturityDate 	          =  cfDate . last . bbCoupons
         -- | Theoretical bond yield
         bbYield                  :: b->Double
         -- | Theoretical clean price
@@ -30,9 +30,9 @@ data SimpleBond = SimpleBond {
         } deriving (Show)
 
 instance Bond SimpleBond where
-       bbSettlementDays b = sbSettlementDays b
-       bbIssueDate      b = sbIssueDate b
-       bbCoupons        b = sbCoupons b
+       bbSettlementDays   = sbSettlementDays
+       bbIssueDate        = sbIssueDate
+       bbCoupons          = sbCoupons
 
        bbYield         _ = 0.0
        bbCleanPrice    _ = 0.0

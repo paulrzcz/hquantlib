@@ -19,8 +19,8 @@ class StochasticProcess a where
         diff   :: a->Dot->Double
         evolve :: Discretize b=> b->a->Dot->Double->Dot
         evolve discr p dot dw = Dot newT newX
-                where   !newT = ((+) (getT dot) (dDt p discr dot))
-                        !newX = (getX dot) + (dDrift p discr dot) + (dDiff p discr dot)*dw
+                where   !newT = getT dot + dDt p discr dot
+                        !newX = getX dot + dDrift p discr dot + dDiff p discr dot * dw
  
 -- | Dot. t and x pair
 data Dot = Dot { getT :: {-# UNPACK #-} !Double, getX :: {-# UNPACK #-} !Double }
@@ -35,7 +35,7 @@ generatePath rnd discr sp steps x0 = do
         (!list, _) <- foldM generator ([], rnd) [1..steps]
         let !path = foldl' evolver [x0] list
         return $! reverse path
-        where   evolver p dw = (evolve discr sp (head p) dw) : p
+        where   evolver p dw = evolve discr sp (head p) dw : p
                 generator (list, r) _ = do
                         (!p, newRnd) <- ngGetNext r
                         return (p:list, newRnd)
@@ -48,8 +48,8 @@ data GeometricBrownian = GeometricBrownian {
         } deriving (Show)
 
 instance StochasticProcess GeometricBrownian where
-        drift p (Dot _ x) = (gbDrift p) * x
-        diff  p (Dot _ x) = (gbDiff p)  * x
+        drift p (Dot _ x) = gbDrift p * x
+        diff  p (Dot _ x) = gbDiff p  * x
 
 -- | Ito process
 data ItoProcess = ItoProcess { 
@@ -58,8 +58,8 @@ data ItoProcess = ItoProcess {
         }
 
 instance StochasticProcess ItoProcess where
-        drift p d = (ipDrift p) d
-        diff  p d = (ipDiff  p) d
+        drift   = ipDrift
+        diff    = ipDiff
 
 -- | Square-root process
 data SquareRootProcess = SquareRootProcess { 
@@ -69,8 +69,8 @@ data SquareRootProcess = SquareRootProcess {
         } deriving (Show)
 
 instance StochasticProcess SquareRootProcess where
-       drift p (Dot _ x) = (srpSpeed p)*((srpMean p) - x)
-       diff  p (Dot _ x) = (srpSigma p)*(sqrt x)
+       drift p (Dot _ x) = srpSpeed p * (srpMean p - x)
+       diff  p (Dot _ x) = srpSigma p * sqrt x
 
 -- | Ornstein-Uhlenbeck process
 data OrnsteinUhlenbeckProcess = OrnsteinUhlenbeckProcess {
@@ -80,8 +80,8 @@ data OrnsteinUhlenbeckProcess = OrnsteinUhlenbeckProcess {
         } deriving (Show)
 
 instance StochasticProcess OrnsteinUhlenbeckProcess where
-        drift p (Dot _ x) = (oupSpeed p)*((oupLevel p) - x)
-        diff  p _ = (oupSigma p)
+        drift p (Dot _ x) = oupSpeed p * (oupLevel p - x)
+        diff  p _         = oupSigma p
 
 -- | Generalized Black-Scholes process
 data BlackScholesProcess = BlackScholesProcess {
@@ -91,7 +91,7 @@ data BlackScholesProcess = BlackScholesProcess {
         }
 
 instance StochasticProcess BlackScholesProcess where
-        drift (BlackScholesProcess r q v) dot = (r $ getT dot) - (q $ getT dot) - 0.5*(v dot)**2 
-        diff  p dot = (bspBlackVol p) dot
+        drift (BlackScholesProcess r q v) dot 	= r (getT dot) - q ( getT dot) - 0.5 * v dot ** 2 
+        diff    				= bspBlackVol
 
 

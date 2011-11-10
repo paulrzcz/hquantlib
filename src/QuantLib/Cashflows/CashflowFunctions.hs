@@ -21,16 +21,16 @@ cfMaturityDate :: Leg->Date
 cfMaturityDate = cfDate . minimumBy cfCompareDates
 
 cfIsExpired :: Leg->Bool->Date->Bool
-cfIsExpired leg True date       = all (\x -> evOccuredInclude x date) leg
-cfIsExpired leg False date      = all (\x -> evOccured x date) leg
+cfIsExpired leg True date       = all (`evOccuredInclude` date) leg
+cfIsExpired leg False date      = all (`evOccured` date) leg
 
 cfPreviousLeg  :: Leg->Bool->Date->Leg
-cfPreviousLeg leg True  date = takeWhile (\x -> evOccuredInclude x date) leg
-cfPreviousLeg leg False date = takeWhile (\x -> evOccured x date) leg
+cfPreviousLeg leg True  date = takeWhile (`evOccuredInclude` date) leg
+cfPreviousLeg leg False date = takeWhile (`evOccured` date) leg
 
 cfNextLeg  :: Leg->Bool->Date->Leg
-cfNextLeg leg True  date = dropWhile (\x -> evOccuredInclude x date) leg
-cfNextLeg leg False date = dropWhile (\x -> evOccured x date) leg
+cfNextLeg leg True  date = dropWhile (`evOccuredInclude` date) leg
+cfNextLeg leg False date = dropWhile (`evOccured` date) leg
 
 cfPrevious :: Leg->Bool->Date->CashFlow
 cfPrevious leg include date = last $ cfPreviousLeg leg include date

@@ -24,5 +24,5 @@ instance Holiday CzechCalendar where
         isHoliday _ (2004,12,31)= True
         isHoliday _ (y, m, d)   = not (weekend || easter)
                 where   weekend = isWeekEnd day
-                        easter  = day == (addDays 1 (gregorianEaster y))
+                        easter  = day == addDays 1 (gregorianEaster y)
                         day     = fromGregorian y m d

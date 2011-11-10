@@ -35,7 +35,7 @@ instance DoubleVolatilityEstimator SimpleLocalEstimator where
                        (result, _) =  M.foldrWithKey volFunc ([], Nothing) series
                        volFunc _ s (xs, Nothing) = (xs, Just s)
                        volFunc k s (xs, Just s0) = ((k, estimator s0 s):xs, Just s)
-                       estimator s0 s1 = (abs $ log (s1/s0))/yf
+                       estimator s0 s1 = abs (log (s1 / s0) ) / yf
 
 -- | Garman-Klass interval estimators
 data GarmanKlass = GarmanKlass {
@@ -45,7 +45,7 @@ data GarmanKlass = GarmanKlass {
 instance IntervalVolatilityEstimator GarmanKlass where
         iveCalculate (GarmanKlass yf) ipc series = M.fromList result
                 where   result = M.foldrWithKey volFunc [] series
-                        volFunc k s xs = (k, (abs $ calculatePoint s)/yf):xs
+                        volFunc k s xs = (k, abs (calculatePoint s) / yf):xs
                         calculatePoint = ipcCalculatePoint ipc
 
 -- | Types of Garman-Klass estimators
@@ -53,7 +53,7 @@ data GarmanKlassPoint = GarmanKlassSimpleSigma
         | ParkinsonSigma
 
 instance IntervalPointCalculator GarmanKlassPoint where
-        ipcCalculatePoint GarmanKlassSimpleSigma (IntervalPrice open _ _ close) = (log (close/open))**2
+        ipcCalculatePoint GarmanKlassSimpleSigma (IntervalPrice open _ _ close) =  log (close/open) ** 2
 
         ipcCalculatePoint ParkinsonSigma (IntervalPrice o h l _) = (u-d)**2 / 4.0 / log 2.0
                 where   u = log (h/o)

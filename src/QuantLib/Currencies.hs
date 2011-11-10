@@ -1,9 +1,5 @@
-module QuantLib.Currencies
-        ( module QuantLib.Currency
-        , module QuantLib.Currencies.Europe
-        , module QuantLib.Currencies.America
-        ) where
+module QuantLib.Currencies ( module Q ) where
 
-import QuantLib.Currency
-import QuantLib.Currencies.Europe
-import QuantLib.Currencies.America
+import QuantLib.Currency as Q
+import QuantLib.Currencies.Europe as Q
+import QuantLib.Currencies.America as Q

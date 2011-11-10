@@ -77,8 +77,8 @@ inverseRecovery x
         | isCloseToZero = 0.0
         | isCloseToOne  = 1.0
         | otherwise     = 0.0/0.0 -- NaN effectively
-        where   isCloseToZero   = (abs x) < ulp
-                isCloseToOne    = diff <= tolerance*(abs x) || diff <= tolerance
+        where   isCloseToZero   = abs x < ulp
+                isCloseToOne    = diff <= tolerance * abs x || diff <= tolerance
                 diff            = abs (x-1.0)
                 tolerance       = 42*ulp
 {-# INLINE inverseRecovery #-}

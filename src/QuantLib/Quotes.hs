@@ -30,7 +30,7 @@ data CompositeQuote a = CompositeQuote {
         }
 
 instance Quote (CompositeQuote a) where
-        qValue x        = (cqComposite x) (cqQuote1 x) (cqQuote2 x)
+        qValue x        = cqComposite x (cqQuote1 x) (cqQuote2 x)
 
 -- | Market element whose value depends on another quote
 data DerivedQuote a = DerivedQuote {
@@ -39,7 +39,7 @@ data DerivedQuote a = DerivedQuote {
         }
 
 instance Quote (DerivedQuote a) where
-        qValue x        = (dqDerivateFunc x) (dqQuote x)
+        qValue x        = dqDerivateFunc x (dqQuote x)
 
 -- | Quote for the implied standard deviation of an underlying
 data ImpliedStdDevQuote a = ImpliedStdDevQuote {
@@ -68,7 +68,7 @@ instance Quote a => Quote (EurodollarFutureQuote a) where
                 | strike > forwardValue = blackFormulaImpliedStdDev Call strike forwardValue putValue 1.0 0.0 guess 1.0e-6 100
                 | otherwise     = blackFormulaImpliedStdDev Put strike forwardValue callValue 1.0 0.0 guess 1.0e-6 100
                 where
-                        forwardValue = 100.0 - (fromMaybe 0.0 (qValue forward))
+                        forwardValue = 100.0 - fromMaybe 0.0 (qValue forward)
                         putValue     = fromMaybe 0.0 (qValue putPrice)
                         callValue    = fromMaybe 0.0 (qValue callPrice)
 
