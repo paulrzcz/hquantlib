@@ -8,8 +8,20 @@ module QuantLib.Stochastic.Random
         , mkInverseNormal
         ) where
 
-import GSL.Random.Gen
 import QuantLib.Math.InverseNormal
+
+-- This is a dirty stub!!!
+
+data RNG = RNG
+
+mt19937 = 1
+
+newRNG x = do 
+	return $ RNG
+
+getUniformPos = undefined
+
+--- ================== ---
 
 -- | Box-Muller method
 data BoxMuller = BoxMuller {
