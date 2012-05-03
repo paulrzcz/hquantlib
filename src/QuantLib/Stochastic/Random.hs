@@ -8,35 +8,23 @@ module QuantLib.Stochastic.Random
         , mkInverseNormal
         ) where
 
+import System.Random.Mersenne
 import QuantLib.Math.InverseNormal
-
--- This is a dirty stub!!!
-
-data RNG = RNG
-
-mt19937 = 1
-
-newRNG x = do 
-	return $ RNG
-
-getUniformPos = undefined
-
---- ================== ---
 
 -- | Box-Muller method
 data BoxMuller = BoxMuller {
         bmFirst         :: Bool,
         bmSecondValue   :: Double,
-        bmRng           :: RNG
+        bmRng           :: MTGen
         }
 
 mkNormalGen ::  IO BoxMuller
 mkNormalGen = do
-        rng <- newRNG mt19937
+        rng <- newMTGen Nothing
         return $! createNormalGen rng
 
 -- | Creates normally distributed generator
-createNormalGen :: RNG->BoxMuller
+createNormalGen :: MTGen->BoxMuller
 createNormalGen r = BoxMuller {
         bmFirst         = True,
         bmSecondValue   = 0.0,
@@ -58,26 +46,27 @@ instance NormalGenerator BoxMuller where
                         bmSecondValue   = s2*ratio,
                         bmRng           = rng
                         }
-                return $! (s1*ratio, bm)
+                return (s1*ratio, bm)
                 where   getRs = do
-                                x1 <- getUniformPos rng
-                                x2 <- getUniformPos rng
+                                x1 <- random rng :: IO Double
+                                x2 <- random rng :: IO Double
                                 let !s1 = 2.0*x1-1.0
                                 let !s2 = 2.0*x2-1.0
                                 let !r = s1*s1 + s2*s2
-                                if r>=1.0 || r<=0.0 then getRs else return $! (r, s1, s2)
+                                if r>=1.0 || r<=0.0 then getRs else return (r, s1, s2)
                         
-        ngGetNext (BoxMuller False !s !r) = return $! (s, BoxMuller True s r)
+        ngGetNext (BoxMuller False !s !r) = return (s, BoxMuller True s r)
 
 -- | Normal number generation using inverse cummulative normal distribution
-data InverseNormal = InverseNormal RNG
+data InverseNormal = InverseNormal MTGen
 
+mkInverseNormal ::  IO InverseNormal
 mkInverseNormal = do
-        rng <- newRNG mt19937
+        rng <- newMTGen Nothing
         return $! InverseNormal rng
         
 instance NormalGenerator InverseNormal where
         ngMkNew _       = mkInverseNormal
         ngGetNext gen@(InverseNormal rng)   = do
-                x <- getUniformPos rng
-                return $! (inverseNormal x, gen)
+                x <- random rng :: IO Double
+                return (inverseNormal x, gen)

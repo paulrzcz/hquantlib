@@ -5,7 +5,6 @@ import Control.Monad
 import qualified Data.Map as M
 import QuantLib.Methods.MonteCarlo
 import QuantLib.Stochastic
-import GSL.Random.Gen
 import Data.List
 
 data MaxMinClosePricer = MMCP {
@@ -53,5 +52,5 @@ main = do
         let pg      = ProcessGenerator start 100 sp rng discrete
         let pmc     = PathMonteCarlo summary mmcp pg
         s <- monteCarlo pmc 50000
-        printMap s
+        -- printMap s
         print (getHsSize s)

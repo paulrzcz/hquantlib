@@ -1,10 +1,9 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, BangPatterns, DatatypeContexts #-}
+{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, BangPatterns #-}
 module QuantLib.Methods.MonteCarlo
         ( module QuantLib.Methods.MonteCarlo
         ) where
 
 import Control.Monad()
--- import Control.Monad.MC
 import Control.Parallel.Strategies
 import QuantLib.Stochastic.Process
 import QuantLib.Stochastic.Random
@@ -45,12 +44,12 @@ monteCarloParallel (PathMonteCarlo s p g) size = do
                         return $! ppPrice p path
 
 -- | Path-dependant Monte Carlo engine
-data (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g
-        = PathMonteCarlo {
+data PathMonteCarlo s p g =
+        PathMonteCarlo {
                 pmcSummary      :: s,
                 pmcPricer       :: p,
                 pmcGenerator    :: g
-                }
+        }
 
 -- | This pricer gets the last point of path
 data LastPointPricer = LastPointPricer Dot
@@ -59,8 +58,8 @@ instance PathPricer LastPointPricer where
         ppPrice _ path = LastPointPricer (last path) 
 
 -- | Stochastic process generator
-data (StochasticProcess sp, NormalGenerator b, Discretize d) => ProcessGenerator sp b d 
-        = ProcessGenerator {
+data ProcessGenerator sp b d = 
+        ProcessGenerator {
                 pgStart         :: Dot,
                 pgLength        :: Int,
                 pgProcess       :: sp,
