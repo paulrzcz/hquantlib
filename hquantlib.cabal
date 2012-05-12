@@ -9,7 +9,7 @@ synopsis:       HQuantLib is a port of essencial parts of QuantLib to Haskell
 description:    HQuantLib is intended to be a functional style port of QuantLib (http://quantlib.org)
 build-type:     Simple
 stability:      alpha
-homepage:       http://code.google.com/p/hquantlib/
+homepage:       http://github.com/paulrzcz/hquantlib.git
 cabal-version:  >= 1.10.0
 
 source-repository head
@@ -19,7 +19,11 @@ source-repository head
 source-repository this
         type:           git
         location:       https://github.com/paulrzcz/hquantlib.git
-        tag:            0.0.2
+        tag:            0.0.2.2
+
+flag optimize
+        description : Enable optimizations for library and benchmarks
+        default     : True
 
 library
         default-language: Haskell2010
@@ -71,4 +75,6 @@ library
 
         hs-source-dirs: src
         ghc-options:    -Wall
+        if flag(optimize)
+                ghc-options: -funbox-strict-fields -O2 -fspec-constr -fdicts-cheap
 
