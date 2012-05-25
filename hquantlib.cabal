@@ -58,6 +58,7 @@ library
                 QuantLib.Time.Date
                 QuantLib.Time.DayCounter
                 QuantLib.Math.InverseNormal
+                QuantLib.Math.ClaytonCopula
         
         build-depends:  
                         base            >3 && <5,
