@@ -3,3 +3,4 @@ module QuantLib.Math
         ) where
 
 import QuantLib.Math.InverseNormal
+import QuantLib.Math.ClaytonCopula
