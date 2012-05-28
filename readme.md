@@ -10,5 +10,5 @@ The latest version implements:
 4. Instruments: Bonds and Stocks
 5. Monte Carlo engine for 1D processes
 6. Volatility estimators: simple local estimator, Garman-Klass simple sigma and Parkinson sigma.
-
+7. Copulas : Clayton, Max, Min, Ali-Mikhail-Haq and Farlie-Gumbel-Morgenstern
 

@@ -1,5 +1,5 @@
 name:           hquantlib
-version:        0.0.2.2
+version:        0.0.2.3
 license:        LGPL
 license-file:   LICENSE
 author:         Pavel Ryzhov
@@ -19,7 +19,7 @@ source-repository head
 source-repository this
         type:           git
         location:       https://github.com/paulrzcz/hquantlib.git
-        tag:            0.0.2.2
+        tag:            0.0.2.3
 
 flag optimize
         description : Enable optimizations for library and benchmarks
