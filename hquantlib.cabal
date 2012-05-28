@@ -41,6 +41,7 @@ library
                 QuantLib.TimeSeries
                 QuantLib.Money
                 QuantLib.Math
+                QuantLib.Math.Copulas
                 QuantLib.Prices
                 QuantLib.Position
                 QuantLib.Options
@@ -58,7 +59,6 @@ library
                 QuantLib.Time.Date
                 QuantLib.Time.DayCounter
                 QuantLib.Math.InverseNormal
-                QuantLib.Math.ClaytonCopula
         
         build-depends:  
                         base            >3 && <5,
