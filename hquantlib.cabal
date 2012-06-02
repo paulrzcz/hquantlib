@@ -33,6 +33,7 @@ library
                 QuantLib.Instruments
                 QuantLib.Currencies
                 QuantLib.Stochastic
+                QuantLib.Priceable
                 QuantLib.PricingEngines
                 QuantLib.PricingEngines.BlackFormula
                 QuantLib.Quotes
