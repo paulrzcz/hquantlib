@@ -30,15 +30,19 @@ data Copulas = ClaytonCopula Double
         | FarlieGumbelMorgensternCopula Double
         | FrankCopula Double
         | GalambosCopula Double
+        | GaussianCopula Double
+        | GumbelCopula Double
 
 instance Copula Copulas where
-        copulaFunc (ClaytonCopula theta) = claytonCopula theta
-        copulaFunc MinCopula = minCopula
-        copulaFunc MaxCopula = maxCopula
-        copulaFunc (AliMikhailHaqCopula theta) = aliMikhailHaqCopula theta
-        copulaFunc (FarlieGumbelMorgensternCopula theta) = farlieGumbelMorgenstern theta
-        copulaFunc (FrankCopula theta) = frankCopula theta
-        copulaFunc (GalambosCopula theta) = galambosCopula theta
+        copulaFunc (ClaytonCopula theta)                    = claytonCopula theta
+        copulaFunc MinCopula                                = minCopula
+        copulaFunc MaxCopula                                = maxCopula
+        copulaFunc (AliMikhailHaqCopula theta)              = aliMikhailHaqCopula theta
+        copulaFunc (FarlieGumbelMorgensternCopula theta)    = farlieGumbelMorgenstern theta
+        copulaFunc (FrankCopula theta)                      = frankCopula theta
+        copulaFunc (GalambosCopula theta)                   = galambosCopula theta
+        copulaFunc (GaussianCopula rho)                     = gaussianCopula rho
+        copulaFunc (GumbelCopula theta)                     = gumbelCopula theta 
 
 {- Private implementations   -}
 
@@ -75,10 +79,22 @@ minCopula x y = Just (min x y)
 maxCopula ::  (Fractional a, Ord a) => a -> a -> Maybe a
 maxCopula x y = Just (max 0.0 (x+y-1.0))
 
+frankCopula ::  (Eq a, Floating a) => a -> a -> a -> Maybe a
 frankCopula theta x y
     | theta     == 0.0 = Nothing
     | otherwise = Just (-1.0/theta * log (1 + (exp (-theta*x) - 1.0) * (exp (-theta*y) -1.0) / (exp (-theta) - 1.0)   ))
  
+galambosCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
 galambosCopula theta x y
     | theta <= 0.0  = Nothing
     | otherwise     = Just (x * y * exp ( ( (-log x) ** (-theta) + (-log y) ** (-theta) ) ** (-1.0/theta)  ))
+
+gaussianCopula ::  (Fractional a, Ord a) => a -> t -> t1 -> Maybe a1
+gaussianCopula rho x y
+    | rho >= -1.0 && rho <= 1.0 = undefined
+    | otherwise                 = Nothing
+
+gumbelCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
+gumbelCopula theta x y
+    | theta >= 1.0  = Just (exp ( - ( (-log x) ** theta + (-log y) ** theta) ** (1.0/theta)))
+    | otherwise     = Nothing
