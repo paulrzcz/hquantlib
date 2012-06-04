@@ -35,6 +35,7 @@ data Copulas = ClaytonCopula Double
         | HuslerReissCopula Double
         | IndependentCopula
         | MarshallOlkinCopula Double Double
+        | PlackettCopula Double
 
 instance Copula Copulas where
         copulaFunc (ClaytonCopula theta)                    = claytonCopula theta
@@ -49,6 +50,7 @@ instance Copula Copulas where
         copulaFunc (HuslerReissCopula theta)                = huslerReissCopula theta 
         copulaFunc IndependentCopula                        = independentCopula
         copulaFunc (MarshallOlkinCopula a b)                = marshallOlkinCopula a b
+        copulaFunc (PlackettCopula theta)                   = plackettCopula theta
 
 {- Private implementations   -}
 
@@ -116,3 +118,11 @@ marshallOlkinCopula :: (Floating a, Ord a) => a -> a -> a -> a -> Maybe a
 marshallOlkinCopula a b x y
     | a >= 0.0 && b >= 0.0  = Just (min (y * (x ** (1-a))) (x * (y ** (1-b))))
     | otherwise             = Nothing
+
+plackettCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
+plackettCopula theta x y
+    | theta >= 0.0 && theta /= 1.0  = Just $ (sumXyTheta1 - sqrt (sumXyTheta1 * sumXyTheta1 - 4.0 * x * y * theta * theta1))/(2*theta1)
+    | otherwise                     = Nothing
+        where   sumXy           = x + y
+                theta1          = theta - 1.0
+                sumXyTheta1     = 1.0 + theta1 * sumXy
