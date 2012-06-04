@@ -39,7 +39,5 @@ instance Bond SimpleBond where
        bbDirtyPrice    _ = 0.0
 
 instance Instrument SimpleBond where
-        iNPV (SimpleBond sd id c)               = undefined
-        iErrorEstimate (SimpleBond sd id c)     = undefined
         iDate (SimpleBond sd id c)              = undefined
         iIsExpired (SimpleBond sd id c)         = undefined

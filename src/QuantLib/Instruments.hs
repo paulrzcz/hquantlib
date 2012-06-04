@@ -1,3 +1,4 @@
+{-# LANGUAGE ExistentialQuantification #-}
 module QuantLib.Instruments
         ( module QuantLib.Instruments.Instrument
         , module QuantLib.Instruments.Stock
