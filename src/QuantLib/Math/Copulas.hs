@@ -28,6 +28,7 @@ data Copulas = ClaytonCopula Double
         | MaxCopula
         | AliMikhailHaqCopula Double
         | FarlieGumbelMorgensternCopula Double
+        | FrankCopula Double
 
 instance Copula Copulas where
         copulaFunc (ClaytonCopula theta) = claytonCopula theta
@@ -35,6 +36,7 @@ instance Copula Copulas where
         copulaFunc MaxCopula = maxCopula
         copulaFunc (AliMikhailHaqCopula theta) = aliMikhailHaqCopula theta
         copulaFunc (FarlieGumbelMorgensternCopula theta) = farlieGumbelMorgenstern theta
+        copulaFunc (FrankCopula theta) = frankCopula theta
 
 {- Private implementations   -}
 
@@ -71,3 +73,7 @@ minCopula x y = Just (min x y)
 maxCopula ::  (Fractional a, Ord a) => a -> a -> Maybe a
 maxCopula x y = Just (max 0.0 (x+y-1.0))
 
+frankCopula theta x y
+    | theta ==0.0 = Nothing
+    | otherwise = Just (-1.0/theta  *  log (1 + (exp (-theta*x) - 1.0) * (exp (-theta*y) -1.0) / (exp (-theta) - 1.0)   ))
+  
