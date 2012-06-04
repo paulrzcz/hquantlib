@@ -32,6 +32,8 @@ data Copulas = ClaytonCopula Double
         | GalambosCopula Double
         | GaussianCopula Double
         | GumbelCopula Double
+        | HuslerReissCopula Double
+        | IndependentCopula
 
 instance Copula Copulas where
         copulaFunc (ClaytonCopula theta)                    = claytonCopula theta
@@ -42,7 +44,9 @@ instance Copula Copulas where
         copulaFunc (FrankCopula theta)                      = frankCopula theta
         copulaFunc (GalambosCopula theta)                   = galambosCopula theta
         copulaFunc (GaussianCopula rho)                     = gaussianCopula rho
-        copulaFunc (GumbelCopula theta)                     = gumbelCopula theta 
+        copulaFunc (GumbelCopula theta)                     = gumbelCopula theta
+        copulaFunc (HuslerReissCopula theta)                = huslerReissCopula theta 
+        copulaFunc IndependentCopula                        = independentCopula
 
 {- Private implementations   -}
 
@@ -98,3 +102,9 @@ gumbelCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
 gumbelCopula theta x y
     | theta >= 1.0  = Just (exp ( - ( (-log x) ** theta + (-log y) ** theta) ** (1.0/theta)))
     | otherwise     = Nothing
+
+huslerReissCopula theta x y
+    | theta > 0.0   = undefined
+    | otherwise     = Nothing
+
+independentCopula x y = x*y
