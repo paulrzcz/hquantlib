@@ -37,12 +37,13 @@ library
                 QuantLib.PricingEngines
                 QuantLib.PricingEngines.BlackFormula
                 QuantLib.Quotes
-                QuantLib.VolatilityModel
                 QuantLib.Time
                 QuantLib.TimeSeries
                 QuantLib.Money
                 QuantLib.Math
                 QuantLib.Math.Copulas
+                QuantLib.Models
+                QuantLib.Models.Volatility
                 QuantLib.Prices
                 QuantLib.Position
                 QuantLib.Options
@@ -68,7 +69,9 @@ library
                         hmatrix         >= 0.14.0.0     && < 0.15.0.0,
                         hmatrix-special >= 0.2.0        && < 0.3.0,
                         parallel        >= 3.2.0.0      && < 3.3.0.0,
-                        mersenne-random >= 1.0.0.1      && < 2.0.0.0
+                        mersenne-random >= 1.0.0.1      && < 2.0.0.0,
+                        statistics      >= 0.10.4.0     && < 0.11.0.0,
+                        vector          >= 0.10.0.0     && < 0.11.0.0
 
         hs-source-dirs: src
         ghc-options:    -Wall

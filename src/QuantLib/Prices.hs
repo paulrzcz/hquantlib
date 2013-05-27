@@ -1,5 +1,7 @@
 module QuantLib.Prices
-        ( module QuantLib.Prices
+        ( PriceType (..)
+        , CallPrice (..)
+        , IntervalPrice (..)
         ) where
 
 -- | Price types
@@ -20,5 +22,3 @@ data IntervalPrice = IntervalPrice {
         ipLow   :: Double,
         ipClose :: Double
         } deriving (Show, Eq)
-
-
