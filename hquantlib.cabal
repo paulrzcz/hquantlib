@@ -6,7 +6,7 @@ author:         Pavel Ryzhov
 maintainer:     Pavel Ryzhov <pavel.ryzhov@gmail.com>
 category:       Finance
 synopsis:       HQuantLib is a port of essencial parts of QuantLib to Haskell
-description:    HQuantLib is intended to be a functional style port of QuantLib (http://quantlib.org)
+description:    HQuantLib is intended to be a functional style port of QuantLib (<http://quantlib.org>)
 build-type:     Simple
 stability:      alpha
 homepage:       http://github.com/paulrzcz/hquantlib.git
