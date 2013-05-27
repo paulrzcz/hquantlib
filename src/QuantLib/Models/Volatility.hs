@@ -2,7 +2,7 @@ module QuantLib.Models.Volatility
     ( Volatility
     , Estimation (..)
     , VolatilityEstimator (..)
-    , VolatilityEstimatorAlgorithms (..)
+    , VolatilityEstimatorAlgorithm (..)
     ) where
 
 import QuantLib.Prices (IntervalPrice(..))
@@ -12,15 +12,19 @@ import qualified Data.Map as M
 import Statistics.Sample (stdDev, fastVarianceUnbiased)
 import qualified Data.Vector.Unboxed as U
 
+-- | Volatility type
 type Volatility = Double
 
+-- | Estimation type with strictness as it is usually required only one 'Double' to process
 data Estimation = Estimation {-# UNPACK #-} !Volatility
-    deriving (Show)
+    deriving (Show, Eq)
 
+-- | Type class of volatility estimators
 class VolatilityEstimator algorithm where
+    -- | The estimation procedure that takes a series of 'QuantLib.Prices.IntervalPrice'
     estimate :: algorithm -> IntervalPriceSeries -> Estimation
 
-data VolatilityEstimatorAlgorithms = SimpleEstimator -- ^ Simple estimator with drift
+data VolatilityEstimatorAlgorithm = SimpleEstimator -- ^ Simple estimator with drift
     | SimpleDriftLessEstimator    -- ^ Simple estimator without drift
     | ParkinsonEstimator          -- ^ Parkinson number
     | GarmanKlass5Estimator       -- ^ Garman-Klass estimator
@@ -28,7 +32,7 @@ data VolatilityEstimatorAlgorithms = SimpleEstimator -- ^ Simple estimator with 
     | YangZhangEstimator          -- ^ Yang-Zhang estimator
     deriving (Show, Eq, Enum)
 
-instance VolatilityEstimator VolatilityEstimatorAlgorithms where
+instance VolatilityEstimator VolatilityEstimatorAlgorithm where
     estimate ParkinsonEstimator       = parkinson
     estimate SimpleEstimator          = simple
     estimate SimpleDriftLessEstimator = simpleDriftLess
