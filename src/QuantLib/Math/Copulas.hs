@@ -1,5 +1,5 @@
 module QuantLib.Math.Copulas
-        ( Copula,
+        ( Copula (..),
           Copulas (..)
         ) where
 

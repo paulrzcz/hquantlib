@@ -1,12 +1,14 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, BangPatterns #-}
+{-# LANGUAGE BangPatterns           #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses  #-}
 module QuantLib.Methods.MonteCarlo
         ( module QuantLib.Methods.MonteCarlo
         ) where
 
-import Control.Monad()
-import Control.Parallel.Strategies
-import QuantLib.Stochastic.Process
-import QuantLib.Stochastic.Random
+import           Control.Monad               ()
+import           Control.Parallel.Strategies
+import           QuantLib.Stochastic.Process
+import           QuantLib.Stochastic.Random
 
 -- | Summary type class aggregates all priced values of paths
 class PathPricer p => Summary m p | m->p where
@@ -26,18 +28,18 @@ class PathPricer m where
 
 
 -- | Monte Carlo engine function
-monteCarlo :: (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
+monteCarlo :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
 monteCarlo (PathMonteCarlo s p g) size = do
-        priced <- mapM (\_ -> pricing) [1..size]
+        priced <- mapM (const pricing) [1..size]
         return $ sSummarize s priced
         where   pricing = do
                         !path <- pgGenerate g
                         return $! ppPrice p path
 
 -- | Monte Carlo engine function. Parallelized version
-monteCarloParallel :: (Summary s p, PathPricer p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
+monteCarloParallel :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->IO s
 monteCarloParallel (PathMonteCarlo s p g) size = do
-        priced <- mapM (\_ -> pricing) [1..size] `using` rpar
+        priced <- mapM (const pricing) [1..size] `using` rpar
         return $ sSummarize s priced
         where   pricing = do
                         !path <- pgGenerate g
@@ -46,25 +48,25 @@ monteCarloParallel (PathMonteCarlo s p g) size = do
 -- | Path-dependant Monte Carlo engine
 data PathMonteCarlo s p g =
         PathMonteCarlo {
-                pmcSummary      :: s,
-                pmcPricer       :: p,
-                pmcGenerator    :: g
+                pmcSummary   :: s,
+                pmcPricer    :: p,
+                pmcGenerator :: g
         }
 
 -- | This pricer gets the last point of path
 data LastPointPricer = LastPointPricer Dot
 
 instance PathPricer LastPointPricer where
-        ppPrice _ path = LastPointPricer (last path) 
+        ppPrice _ path = LastPointPricer (last path)
 
 -- | Stochastic process generator
-data ProcessGenerator sp b d = 
+data ProcessGenerator sp b d =
         ProcessGenerator {
-                pgStart         :: Dot,
-                pgLength        :: Int,
-                pgProcess       :: sp,
-                pgGenerator     :: b,
-                pgDiscretize    :: d
+                pgStart      :: Dot,
+                pgLength     :: Int,
+                pgProcess    :: sp,
+                pgGenerator  :: b,
+                pgDiscretize :: d
         }
 
 instance (StochasticProcess sp, NormalGenerator b, Discretize d) => PathGenerator (ProcessGenerator sp b d) where
@@ -72,4 +74,3 @@ instance (StochasticProcess sp, NormalGenerator b, Discretize d) => PathGenerato
                 newRnd <- ngMkNew rnd
                 return $! ProcessGenerator start len process newRnd d
         pgGenerate (ProcessGenerator start len sp b d) = generatePath b d sp len start
-
