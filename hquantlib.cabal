@@ -1,5 +1,5 @@
 name:           hquantlib
-version:        0.0.2.5
+version:        0.0.3.0
 license:        LGPL
 license-file:   LICENSE
 author:         Pavel Ryzhov
@@ -48,7 +48,7 @@ library
                 QuantLib.Position
                 QuantLib.Options
                 QuantLib.Methods.MonteCarlo
-        
+
         other-modules:
                 QuantLib.Currencies.America
                 QuantLib.Currencies.Europe
@@ -61,19 +61,19 @@ library
                 QuantLib.Time.Date
                 QuantLib.Time.DayCounter
                 QuantLib.Math.InverseNormal
-        
-        build-depends:  
+
+        build-depends:
                         base            >3              && <5,
                         time            >= 1.4.0.0      && < 1.7.0.0,
                         containers      >= 0.5.0.0      && < 0.6.0.0,
-                        hmatrix         >= 0.16.0.0     && < 0.17.0.0,
-                        hmatrix-gsl     >= 0.16.0.0     && < 0.17.0.0,
-                        hmatrix-special >= 0.3.0        && < 0.4.0,
+                        hmatrix         >= 0.17.0.0     && < 0.18.0.0,
+                        hmatrix-gsl     >= 0.17.0.0     && < 0.18.0.0,
+                        hmatrix-special >= 0.4.0        && < 0.5.0,
                         parallel        >= 3.2.0.0      && < 3.3.0.0,
                         mersenne-random >= 1.0.0.1      && < 2.0.0.0,
                         statistics      >= 0.13.0.0     && < 0.14.0.0,
-                        vector          >= 0.10.0.0     && < 0.11.0.0,
-                        vector-algorithms >= 0.6.0.0    && < 0.7.0.0
+                        vector          >= 0.11.0.0     && < 0.12.0.0,
+                        vector-algorithms >= 0.7.0.0    && < 0.8.0.0
 
         hs-source-dirs: src
         ghc-options:    -Wall
@@ -89,6 +89,5 @@ Test-Suite main-test
                             test-framework  >= 0.8                && < 0.9,
                             test-framework-hunit >= 0.3.0         && < 0.4.0,
                             test-framework-quickcheck2 >= 0.3.0.0 && < 0.4.0,
-                            QuickCheck      >= 2.5.0              && < 2.6.0,
+                            QuickCheck      >= 2.8.0              && < 2.9.0,
                             HUnit           >= 1.2.5.2            && < 2.0.0.0
-

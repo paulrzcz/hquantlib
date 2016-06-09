@@ -14,10 +14,10 @@ class Event a where
         evOccuredInclude event date = evDate event <= date
 
         evCompare :: a->a->Ordering
-        evCompare x y     
-                | evDate x == evDate y 		= EQ
-                | evDate x <= evDate y      	= LT
-                | otherwise                     = GT
+        evCompare x y
+                | evDate x == evDate y = EQ
+                | evDate x <= evDate y = LT
+                | otherwise            = GT
 
         evEqual :: a->a->Bool
         evEqual x y = evDate x == evDate y
@@ -40,7 +40,7 @@ instance Ord CashFlow where
 -- | Sequence of cash-flows
 type Leg        = [CashFlow]
 
-data Callability = Call { 
+data Callability = Call {
         cPrice  :: CallPrice,
         cDate   :: Date
         } | Put {

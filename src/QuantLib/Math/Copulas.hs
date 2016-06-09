@@ -1,9 +1,9 @@
 module QuantLib.Math.Copulas
         ( Copula,
-          Copulas (..) 
+          Copulas (..)
         ) where
 
-{-| Copula type class. 
+{-| Copula type class.
  -| Normally instance should implement only copulaFunc.
  -| Method copula provides a precheck for [0..1] range for x and y but real implementation is in copulaFunc
  -}
@@ -47,7 +47,7 @@ instance Copula Copulas where
         copulaFunc (GalambosCopula theta)                   = galambosCopula theta
         copulaFunc (GaussianCopula rho)                     = gaussianCopula rho
         copulaFunc (GumbelCopula theta)                     = gumbelCopula theta
-        copulaFunc (HuslerReissCopula theta)                = huslerReissCopula theta 
+        copulaFunc (HuslerReissCopula theta)                = huslerReissCopula theta
         copulaFunc IndependentCopula                        = independentCopula
         copulaFunc (MarshallOlkinCopula a b)                = marshallOlkinCopula a b
         copulaFunc (PlackettCopula theta)                   = plackettCopula theta
@@ -69,17 +69,17 @@ farlieGumbelMorgenstern theta x y
                 = Nothing
 
 {-|  Original code and algorithm from the Quantlib project
-     implemented in Haskell by Nicholas Pezolano 
+     implemented in Haskell by Nicholas Pezolano
                                   npezolano "at" gmail.com
 -}
 claytonCopula :: Double -> Double -> Double -> Maybe Double
 claytonCopula theta x y
-	|  theta ==0 
-	|| theta < -1.0
-	 = Nothing
+  |  theta ==0
+  || theta < -1.0
+   = Nothing
 
-	| otherwise 
-	= Just $ max( (x ** (-theta) ) +   (y ** (-theta)-1.0)  **   (-1.0/theta)) 0
+   | otherwise
+   = Just $ max( (x ** (-theta) ) +   (y ** (-theta)-1.0)  **   (-1.0/theta)) 0
 
 minCopula ::  Ord a => a -> a -> Maybe a
 minCopula x y = Just (min x y)
@@ -91,7 +91,7 @@ frankCopula ::  (Eq a, Floating a) => a -> a -> a -> Maybe a
 frankCopula theta x y
     | theta     == 0.0 = Nothing
     | otherwise = Just (-1.0/theta * log (1 + (exp (-theta*x) - 1.0) * (exp (-theta*y) -1.0) / (exp (-theta) - 1.0)   ))
- 
+
 galambosCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
 galambosCopula theta x y
     | theta <= 0.0  = Nothing

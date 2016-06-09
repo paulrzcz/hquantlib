@@ -3,9 +3,9 @@ module QuantLib.Stochastic.Process
         ( module QuantLib.Stochastic.Process )
         where
 
-import Control.Monad (foldM)
-import Data.List (foldl')
-import QuantLib.Stochastic.Random (NormalGenerator (..))
+import           Control.Monad              (foldM)
+import           Data.List                  (foldl')
+import           QuantLib.Stochastic.Random (NormalGenerator (..))
 
 -- | Discretization of stochastic process over given interval
 class Discretize b where
@@ -21,7 +21,7 @@ class StochasticProcess a where
         evolve discr p dot dw = Dot newT newX
                 where   !newT = getT dot + dDt p discr dot
                         !newX = getX dot + dDrift p discr dot + dDiff p discr dot * dw
- 
+
 -- | Dot. t and x pair
 data Dot = Dot { getT :: {-# UNPACK #-} !Double, getX :: {-# UNPACK #-} !Double }
         deriving (Show, Eq)
@@ -42,9 +42,9 @@ generatePath rnd discr sp steps x0 = do
 
 
 -- | Geometric Brownian motion
-data GeometricBrownian = GeometricBrownian { 
-        gbDrift :: Double, 
-        gbDiff :: Double 
+data GeometricBrownian = GeometricBrownian {
+        gbDrift :: Double,
+        gbDiff  :: Double
         } deriving (Show)
 
 instance StochasticProcess GeometricBrownian where
@@ -52,9 +52,9 @@ instance StochasticProcess GeometricBrownian where
         diff  p (Dot _ x) = gbDiff p  * x
 
 -- | Ito process
-data ItoProcess = ItoProcess { 
-        ipDrift :: Dot->Double, 
-        ipDiff :: Dot->Double 
+data ItoProcess = ItoProcess {
+        ipDrift :: Dot->Double,
+        ipDiff  :: Dot->Double
         }
 
 instance StochasticProcess ItoProcess where
@@ -62,10 +62,10 @@ instance StochasticProcess ItoProcess where
         diff    = ipDiff
 
 -- | Square-root process
-data SquareRootProcess = SquareRootProcess { 
-        srpSpeed        :: Double, 
-        srpMean         :: Double,
-        srpSigma        :: Double
+data SquareRootProcess = SquareRootProcess {
+        srpSpeed :: Double,
+        srpMean  :: Double,
+        srpSigma :: Double
         } deriving (Show)
 
 instance StochasticProcess SquareRootProcess where
@@ -74,9 +74,9 @@ instance StochasticProcess SquareRootProcess where
 
 -- | Ornstein-Uhlenbeck process
 data OrnsteinUhlenbeckProcess = OrnsteinUhlenbeckProcess {
-        oupSpeed        :: Double,
-        oupLevel        :: Double,
-        oupSigma        :: Double
+        oupSpeed :: Double,
+        oupLevel :: Double,
+        oupSigma :: Double
         } deriving (Show)
 
 instance StochasticProcess OrnsteinUhlenbeckProcess where
@@ -85,13 +85,11 @@ instance StochasticProcess OrnsteinUhlenbeckProcess where
 
 -- | Generalized Black-Scholes process
 data BlackScholesProcess = BlackScholesProcess {
-        bspRiskFree     :: Double->Double,
-        bspDividend     :: Double->Double,
-        bspBlackVol     :: Dot->Double
+        bspRiskFree :: Double->Double,
+        bspDividend :: Double->Double,
+        bspBlackVol :: Dot->Double
         }
 
 instance StochasticProcess BlackScholesProcess where
-        drift (BlackScholesProcess r q v) dot 	= r (getT dot) - q ( getT dot) - 0.5 * v dot ** 2 
-        diff    				= bspBlackVol
-
-
+        drift (BlackScholesProcess r q v) dot = r (getT dot) - q ( getT dot) - 0.5 * v dot ** 2
+        diff = bspBlackVol
