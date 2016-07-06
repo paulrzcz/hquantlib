@@ -77,9 +77,20 @@ library
                         HerbiePlugin    == 0.2.0.0
 
         hs-source-dirs: src
-        ghc-options:    -Wall -fplugin=Herbie
+        ghc-options:    -Wall
         if flag(optimize)
-                ghc-options: -funbox-strict-fields -O2 -fspec-constr -fdicts-cheap
+                ghc-options: -funbox-strict-fields -O2 -fspec-constr -fdicts-cheap -fplugin=Herbie
+
+executable mctest
+      default-language:     Haskell2010
+      main-is         :     Tests/McTest.hs
+      hs-source-dirs  :     src
+      ghc-options     :     -threaded -rtsopts
+      build-depends   :     base,
+                            hquantlib,
+                            parallel,
+                            mersenne-random,
+                            containers
 
 Test-Suite main-test
         default-language:   Haskell2010

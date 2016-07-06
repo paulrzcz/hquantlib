@@ -2,10 +2,10 @@ module QuantLib.PricingEngines.BlackFormula
         ( blackFormulaImpliedStdDev
         ) where
 
-import Data.Maybe
-import QuantLib.Options
-import Numeric.GSL.Root
-import Numeric.GSL.Special.Erf
+import           Data.Maybe
+import           Numeric.GSL.Root
+import           Numeric.GSL.Special.Erf
+import           QuantLib.Options
 
 blackFormulaImpliedStdDev :: OptionType->Double->Double->Double->Double->Double->Maybe Double->Double->Int->Maybe Double
 blackFormulaImpliedStdDev opType strike forward blackPrice discount displacement guess accuracy maxIter

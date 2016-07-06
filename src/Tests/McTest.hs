@@ -31,7 +31,7 @@ addOnePath (HS m) (MMCP _ _ close) = HS newM
 
 instance Summary HistoSummary MaxMinClosePricer where
         sNorm _ _ 	= 0.0 -- we don't care about convergence now
-        sSummarize 	= foldl' addOnePath  
+        sSummarize 	= foldl' addOnePath
 
 printMap :: HistoSummary->IO ()
 printMap (HS m) = forM_ list printPlain
@@ -51,6 +51,6 @@ main = do
         rng <- mkInverseNormal
         let pg      = ProcessGenerator start 100 sp rng discrete
         let pmc     = PathMonteCarlo summary mmcp pg
-        s <- monteCarlo pmc 50000
+        s <- monteCarloParallel pmc 50000
         -- printMap s
         print (getHsSize s)
