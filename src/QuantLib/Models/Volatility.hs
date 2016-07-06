@@ -1,16 +1,16 @@
-module QuantLib.Models.Volatility 
+module QuantLib.Models.Volatility
     ( Volatility
     , Estimation (..)
     , VolatilityEstimator (..)
     , VolatilityEstimatorAlgorithm (..)
     ) where
 
-import QuantLib.Prices (IntervalPrice(..))
-import QuantLib.TimeSeries (IntervalPriceSeries)
+import           QuantLib.Prices     (IntervalPrice (..))
+import           QuantLib.TimeSeries (IntervalPriceSeries)
 
-import qualified Data.Map as M
-import Statistics.Sample (stdDev, fastVarianceUnbiased)
+import qualified Data.Map            as M
 import qualified Data.Vector.Unboxed as U
+import           Statistics.Sample   (fastVarianceUnbiased, stdDev)
 
 -- | Volatility type
 type Volatility = Double
@@ -52,6 +52,7 @@ toLogArray prices = U.fromList $ zipWith delog bars (tail bars)
 simple :: IntervalPriceSeries -> Estimation
 simple = Estimation . stdDev . toLogArray
 
+{-# ANN simpleDriftLess "NoHerbie" #-}
 simpleDriftLess :: IntervalPriceSeries -> Estimation
 simpleDriftLess = Estimation . sqrt . divByN . U.foldl' accum (T 0.0 0) . toLogArray
     where
@@ -78,12 +79,13 @@ varRS :: IntervalPriceSeries -> Double
 varRS = combine . M.foldl' point (T 0.0 0)
     where
         combine (T a n) = a / fromIntegral n
-        point (T a n) (IntervalPrice o h l c) = 
+        point (T a n) (IntervalPrice o h l c) =
             T (a + logBase c h * logBase o h + logBase c l * logBase o l) (n + 1)
 
 toSimpleLogWith :: (IntervalPrice -> Double) -> IntervalPriceSeries -> U.Vector Double
 toSimpleLogWith f = U.fromList . map (f . snd) . M.toAscList
 
+{-# ANN yangZhang "NoHerbie" #-}
 yangZhang :: IntervalPriceSeries -> Estimation
 yangZhang prices = Estimation $ sqrt (varO + k * varC + (1.0 - k) * varRS prices)
     where

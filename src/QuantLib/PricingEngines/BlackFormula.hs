@@ -21,6 +21,7 @@ blackFormulaImpliedStdDev opType strike forward blackPrice discount displacement
                 blackFunction           = blackImpliedStdDevHelper opType strike forward blackPrice displacement
                 ([stdDev], _)           = root DNewton accuracy maxIter blackFunction [realGuess]
 
+{-# ANN blackImpliedStdDevHelper "NoHerbie" #-}
 blackImpliedStdDevHelper :: OptionType-> Double-> Double-> Double-> Double-> [Double]-> [Double]
 blackImpliedStdDevHelper opType strike forward blackPrice displacement [x] =
         [max 0.0 result - blackPrice]

@@ -73,10 +73,11 @@ library
                         mersenne-random >= 1.0.0.1      && < 2.0.0.0,
                         statistics      >= 0.13.0.0     && < 0.14.0.0,
                         vector          >= 0.11.0.0     && < 0.12.0.0,
-                        vector-algorithms >= 0.7.0.0    && < 0.8.0.0
+                        vector-algorithms >= 0.7.0.0    && < 0.8.0.0,
+                        HerbiePlugin    == 0.2.0.0
 
         hs-source-dirs: src
-        ghc-options:    -Wall
+        ghc-options:    -Wall -fplugin=Herbie
         if flag(optimize)
                 ghc-options: -funbox-strict-fields -O2 -fspec-constr -fdicts-cheap
 

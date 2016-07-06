@@ -54,6 +54,7 @@ instance Copula Copulas where
 
 {- Private implementations   -}
 
+{-# ANN aliMikhailHaqCopula "NoHerbie" #-}
 aliMikhailHaqCopula :: (Fractional a, Ord a) => a -> a -> a -> Maybe a
 aliMikhailHaqCopula theta x y
         | theta >= -1.0 && theta <= 1.0
@@ -61,6 +62,7 @@ aliMikhailHaqCopula theta x y
         | otherwise
                 = Nothing
 
+{-# ANN farlieGumbelMorgenstern "NoHerbie" #-}
 farlieGumbelMorgenstern :: (Fractional a, Ord a) => a -> a -> a -> Maybe a
 farlieGumbelMorgenstern theta x y
         | theta >= -1.0 && theta <= 1.0
@@ -72,6 +74,7 @@ farlieGumbelMorgenstern theta x y
      implemented in Haskell by Nicholas Pezolano
                                   npezolano "at" gmail.com
 -}
+{-# ANN claytonCopula "NoHerbie" #-}
 claytonCopula :: Double -> Double -> Double -> Maybe Double
 claytonCopula theta x y
   |  theta ==0
@@ -92,6 +95,7 @@ frankCopula theta x y
     | theta     == 0.0 = Nothing
     | otherwise = Just (-1.0/theta * log (1 + (exp (-theta*x) - 1.0) * (exp (-theta*y) -1.0) / (exp (-theta) - 1.0)   ))
 
+{-# ANN galambosCopula "NoHerbie" #-}
 galambosCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
 galambosCopula theta x y
     | theta <= 0.0  = Nothing
@@ -102,6 +106,7 @@ gaussianCopula rho _ _
     | rho >= -1.0 && rho <= 1.0 = undefined
     | otherwise                 = Nothing
 
+{-# ANN gumbelCopula "NoHerbie" #-}
 gumbelCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
 gumbelCopula theta x y
     | theta >= 1.0  = Just (exp ( - ( (-log x) ** theta + (-log y) ** theta) ** (1.0/theta)))
@@ -120,6 +125,7 @@ marshallOlkinCopula a b x y
     | a >= 0.0 && b >= 0.0  = Just (min (y * (x ** (1-a))) (x * (y ** (1-b))))
     | otherwise             = Nothing
 
+{-# ANN plackettCopula "NoHerbie" #-}
 plackettCopula ::  (Floating a, Ord a) => a -> a -> a -> Maybe a
 plackettCopula theta x y
     | theta >= 0.0 && theta /= 1.0  = Just $ (sumXyTheta1 - sqrt (sumXyTheta1 * sumXyTheta1 - 4.0 * x * y * theta * theta1))/(2*theta1)
