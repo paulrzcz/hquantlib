@@ -54,7 +54,7 @@ data PathMonteCarlo s p g =
         }
 
 -- | This pricer gets the last point of path
-data LastPointPricer = LastPointPricer Dot
+newtype LastPointPricer = LastPointPricer Dot
 
 instance PathPricer LastPointPricer where
         ppPrice _ path = LastPointPricer (last path)
