@@ -5,9 +5,10 @@ module Main where
 
 import           Control.Monad
 import           Data.List
-import qualified Data.Map                    as M
+import qualified Data.Map                      as M
 import           QuantLib.Methods.MonteCarlo
 import           QuantLib.Stochastic
+import           System.Random.Mersenne.Pure64
 
 data MaxMinClosePricer = MMCP {
         mmcpHigh  :: Double,
@@ -54,9 +55,9 @@ main = do
         let start   = Dot 0.0 1.0
         let sp      = GeometricBrownian 0.0 0.005
         let discrete= Euler 0.01
-        rng <- mkInverseNormal
+        rng <- mkInverseNormal :: IO (InverseNormal PureMT)
         let pg      = ProcessGenerator start 1000 sp rng discrete
         let pmc     = PathMonteCarlo summary mmcp pg
-        s <- monteCarlo pmc 50000
-        -- printMap s
+        let s = monteCarlo pmc 50000
+        printMap s
         print (getHsSize s)
