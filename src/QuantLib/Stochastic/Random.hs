@@ -1,7 +1,7 @@
 {-# LANGUAGE BangPatterns #-}
 module QuantLib.Stochastic.Random
         ( BoxMuller
-        , createNormalGen
+--        , createNormalGen
         , mkNormalGen
         , NormalGenerator (..)
         , InverseNormal
@@ -9,22 +9,22 @@ module QuantLib.Stochastic.Random
         ) where
 
 import           QuantLib.Math.InverseNormal
-import           System.Random.Mersenne
+import           System.Random.Mersenne.Pure64
 
 -- | Box-Muller method
 data BoxMuller = BoxMuller {
         bmFirst       :: Bool,
         bmSecondValue :: Double,
-        bmRng         :: MTGen
+        bmRng         :: PureMT
         }
 
 mkNormalGen ::  IO BoxMuller
 mkNormalGen = do
-        rng <- newMTGen Nothing
+        rng <- newPureMT
         return $! createNormalGen rng
 
 -- | Creates normally distributed generator
-createNormalGen :: MTGen->BoxMuller
+createNormalGen :: PureMT -> BoxMuller
 createNormalGen r = BoxMuller {
         bmFirst         = True,
         bmSecondValue   = 0.0,
@@ -33,46 +33,46 @@ createNormalGen r = BoxMuller {
 
 -- | Normally distributed generator
 class NormalGenerator a where
-        ngGetNext :: a -> IO (Double, a)
+        ngGetNext :: a -> (Double, a)
         ngMkNew   :: a -> IO a
 
 instance NormalGenerator BoxMuller where
         ngMkNew _       = mkNormalGen
         ngGetNext = boxMullerGetNext
 
-boxMullerGetNext :: BoxMuller -> IO (Double, BoxMuller)
-boxMullerGetNext (BoxMuller True _ rng) = do
-        (!r, !s1, !s2) <- getRs
-        let !ratio = boxMullerRatio r
-        let !bm = BoxMuller {
+boxMullerGetNext :: BoxMuller -> (Double, BoxMuller)
+boxMullerGetNext (BoxMuller True _ rng) = (s1*ratio, bm)
+  where
+        (!r, !s1, !s2, rng') = getRs
+        !ratio = boxMullerRatio r
+        !bm = BoxMuller {
                 bmFirst         = False,
                 bmSecondValue   = s2*ratio,
-                bmRng           = rng
+                bmRng           = rng'
                 }
-        return (s1*ratio, bm)
-        where   getRs = do
-                        x1 <- random rng :: IO Double
-                        x2 <- random rng :: IO Double
-                        let !s1 = 2.0*x1-1.0
-                        let !s2 = 2.0*x2-1.0
-                        let !r = s1*s1 + s2*s2
-                        if r>=1.0 || r<=0.0 then getRs else return (r, s1, s2)
-boxMullerGetNext (BoxMuller False !s !r) = return (s, BoxMuller True s r)
+        getRs = if r'>=1.0 || r'<=0.0 then getRs else (r', s1', s2', rng2)
+          where
+              (x1, rng1) = randomDouble rng
+              (x2, rng2) = randomDouble rng1
+              s1' = 2.0*x1-1.0
+              s2' = 2.0*x2-1.0
+              r' = s1*s1 + s2*s2
+boxMullerGetNext (BoxMuller False !s !r) = (s, BoxMuller True s r)
 
 {-# ANN boxMullerRatio "NoHerbie" #-}
 boxMullerRatio :: Double -> Double
 boxMullerRatio r = sqrt (-2.0 * log r / r)
 
 -- | Normal number generation using inverse cummulative normal distribution
-data InverseNormal = InverseNormal MTGen
+newtype InverseNormal = InverseNormal PureMT
 
 mkInverseNormal ::  IO InverseNormal
 mkInverseNormal = do
-        rng <- newMTGen Nothing
+        rng <- newPureMT
         return $! InverseNormal rng
 
 instance NormalGenerator InverseNormal where
         ngMkNew _       = mkInverseNormal
-        ngGetNext gen@(InverseNormal rng)   = do
-                x <- random rng :: IO Double
-                return (inverseNormal x, gen)
+        ngGetNext (InverseNormal rng)   =
+                let (x, rng') = randomDouble rng
+                in (inverseNormal x, InverseNormal rng')
