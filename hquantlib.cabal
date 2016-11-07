@@ -19,7 +19,7 @@ source-repository head
 source-repository this
         type:           git
         location:       https://github.com/paulrzcz/hquantlib.git
-        tag:            0.0.2.4
+        tag:            0.0.3.4
 
 flag optimize
         description : Enable optimizations for library and benchmarks
@@ -48,6 +48,7 @@ library
                 QuantLib.Position
                 QuantLib.Options
                 QuantLib.Methods.MonteCarlo
+                QuantLib.Methods.Pricer
 
         other-modules:
                 QuantLib.Currencies.America
@@ -88,6 +89,7 @@ executable mctest
       ghc-options     :     -threaded -rtsopts
       other-modules   :     QuantLib.Math.InverseNormal
                             QuantLib.Methods.MonteCarlo
+                            QuantLib.Methods.Pricer
                             QuantLib.Stochastic
                             QuantLib.Stochastic.Discretize
                             QuantLib.Stochastic.Process

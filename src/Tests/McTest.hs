@@ -7,20 +7,8 @@ import           Control.Monad
 import           Data.List
 import qualified Data.Map                    as M
 import           QuantLib.Methods.MonteCarlo
+import           QuantLib.Methods.Pricer     (MaxMinClosePricer (..))
 import           QuantLib.Stochastic
-
-data MaxMinClosePricer = MMCP {
-        mmcpHigh  :: Double,
-        mmcpLow   :: Double,
-        mmcpClose :: Double
-        } deriving (Show)
-
-instance PathPricer MaxMinClosePricer where
-        ppPrice _ path = MMCP high low close
-                where   !close   = last xs
-                        !high    = maximum xs
-                        !low     = minimum xs
-                        xs      = map getX path
 
 data HistoSummary = HS (M.Map Double Int)
         deriving (Show)

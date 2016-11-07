@@ -53,12 +53,6 @@ data PathMonteCarlo s p g =
                 pmcGenerator :: g
         }
 
--- | This pricer gets the last point of path
-newtype LastPointPricer = LastPointPricer Dot
-
-instance PathPricer LastPointPricer where
-        ppPrice _ path = LastPointPricer (last path)
-
 -- | Stochastic process generator
 data ProcessGenerator sp b d =
         ProcessGenerator {
