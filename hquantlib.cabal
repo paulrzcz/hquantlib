@@ -73,7 +73,8 @@ library
                         mersenne-random-pure64 >= 0.0.0.1      && < 1.0.0.0,
                         statistics      >= 0.13.0.0     && < 0.14.0.0,
                         vector          >= 0.11.0.0     && < 0.12.0.0,
-                        vector-algorithms >= 0.7.0.0    && < 0.8.0.0
+                        vector-algorithms >= 0.7.0.0    && < 0.8.0.0,
+                        dlist             >= 0.8.0.0    && < 0.9.0.0
 
         hs-source-dirs: src
         ghc-options:    -Wall
@@ -95,7 +96,8 @@ executable mctest
                             hquantlib,
                             parallel,
                             mersenne-random-pure64,
-                            containers
+                            containers,
+                            dlist
 
 Test-Suite main-test
         default-language:   Haskell2010

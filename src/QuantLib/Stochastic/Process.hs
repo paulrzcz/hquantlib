@@ -1,9 +1,10 @@
-{-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE BangPatterns        #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 module QuantLib.Stochastic.Process
         ( module QuantLib.Stochastic.Process )
         where
 
-import           Data.List                  (foldl')
+import qualified Data.DList                 as D
 import           QuantLib.Stochastic.Random (NormalGenerator (..))
 
 -- | Discretization of stochastic process over given interval
@@ -14,9 +15,9 @@ class Discretize b where
 
 -- | 1D Stochastic process
 class StochasticProcess a where
-        drift  :: a->Dot->Double
-        diff   :: a->Dot->Double
-        evolve :: Discretize b=> b->a->Dot->Double->Dot
+        drift  :: a -> Dot -> Double
+        diff   :: a -> Dot -> Double
+        evolve :: Discretize b=> b -> a -> Dot -> Double -> Dot
         evolve discr p dot dw = Dot newT newX
                 where   !newT = getT dot + dDt p discr dot
                         !newX = getX dot + dDrift p discr dot + dDiff p discr dot * dw
@@ -31,14 +32,14 @@ type Path = [Dot]
 -- | Generates sample path for given stochastic process under discretization and normal generator for given amount of steps, starting from x0
 generatePath :: (StochasticProcess a, NormalGenerator b, Discretize c) => b->c->a->Int->Dot->(Path, b)
 generatePath rnd discr sp steps x0 =
-        let (!list, rng') = foldl generator ([], rnd) [1..steps]
-            !path = foldl' evolver [x0] list
-        in (reverse path, rng')
-        where   evolver p dw = evolve discr sp (head p) dw : p
-                generator (list, r) _ =
-                        let (!p, newRnd) = ngGetNext r
-                        in (p:list, newRnd)
-
+  let (path, rng', _) = foldl generationF (D.singleton x0, rnd, x0) [1..steps]
+  in (D.toList path, rng')
+  where
+    generationF :: NormalGenerator b => (D.DList Dot, b, Dot) -> Int -> (D.DList Dot, b, Dot)
+    generationF (p, r, lastDot) _ =
+      let (dw, r') = ngGetNext r
+          newP = evolve discr sp lastDot dw
+      in (D.snoc p newP, r', newP)
 
 -- | Geometric Brownian motion
 data GeometricBrownian = GeometricBrownian {

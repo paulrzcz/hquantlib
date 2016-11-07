@@ -58,5 +58,5 @@ main = do
         let pg      = ProcessGenerator start 1000 sp rng discrete
         let pmc     = PathMonteCarlo summary mmcp pg
         let s       = monteCarlo pmc 50000
-        -- printMap s
+        printMap s
         print (getHsSize s)

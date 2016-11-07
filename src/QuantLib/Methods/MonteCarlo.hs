@@ -6,7 +6,7 @@ module QuantLib.Methods.MonteCarlo
         ) where
 
 import           Control.Monad               ()
-import           Control.Parallel.Strategies
+-- import           Control.Parallel.Strategies
 import           QuantLib.Stochastic.Process
 import           QuantLib.Stochastic.Random
 
@@ -15,7 +15,7 @@ class PathPricer p => Summary m p | m->p where
         -- | Updates summary with given priced pathes
         sSummarize      :: m -> [p] -> m
         -- | Defines a metric, i.e. calculate distance between 2 summaries
-        sNorm           :: m->m->Double
+        sNorm           :: m -> m -> Double
 
 -- | Path generator is a stochastic path generator
 class PathGenerator m where
@@ -32,8 +32,9 @@ monteCarlo :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->s
 monteCarlo (PathMonteCarlo s p g) size =
         let (priced, _) = foldl pricing ([], g) [1..size]
         in sSummarize s priced
-        where   pricing (xs, gen) _ = let (!path, g') = pgGenerate gen
-                                      in (ppPrice p path : xs, g')
+        where   pricing (!xs, gen) _ = let (path, g') = pgGenerate gen
+                                           !price = ppPrice p path
+                                       in (price : xs, g')
 
 -- | Monte Carlo engine function. Parallelized version
 -- monteCarloParallel :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->s
