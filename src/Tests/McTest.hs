@@ -8,7 +8,6 @@ import           Data.List
 import qualified Data.Map                      as M
 import           QuantLib.Methods.MonteCarlo
 import           QuantLib.Stochastic
-import           System.Random.Mersenne.Pure64
 
 data MaxMinClosePricer = MMCP {
         mmcpHigh  :: Double,
@@ -23,7 +22,7 @@ instance PathPricer MaxMinClosePricer where
                         !low     = minimum xs
                         xs      = map getX path
 
-data HistoSummary = HS (M.Map Double Int)
+newtype HistoSummary = HS (M.Map Double Int)
         deriving (Show)
 
 toDouble :: Int -> Double

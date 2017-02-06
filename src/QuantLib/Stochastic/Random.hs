@@ -9,7 +9,8 @@ module QuantLib.Stochastic.Random
         ) where
 
 import           QuantLib.Math.InverseNormal
-import           System.Random.Mersenne.Pure64
+
+import QuantLib.Stochastic.PureMT
 
 class RandomGenerator a where
   create :: IO a
@@ -19,7 +20,7 @@ class RandomGenerator a where
 instance RandomGenerator PureMT where
   create = newPureMT
   next   = randomDouble
-  split  = undefined
+  split  = splitMT
 
 -- | Box-Muller method
 data BoxMuller a = BoxMuller {
@@ -91,4 +92,6 @@ instance RandomGenerator a => NormalGenerator (InverseNormal a) where
         ngMkNew _       = mkInverseNormal
         ngGetNext (InverseNormal rng)   = (inverseNormal x, InverseNormal newRng)
           where (x, newRng) = next rng
-        ngSplit = undefined
+        ngSplit (InverseNormal x) = (InverseNormal x1, InverseNormal x2)
+          where
+            (x1, x2) = split x
