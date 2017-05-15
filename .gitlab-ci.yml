@@ -9,4 +9,4 @@ htests_build:
   script:
     - mkdir -p `pwd`/___restore
     - ln -s `pwd`/___restore /root/.stack
-    - stack --no-terminal build htests
+    - stack --no-terminal build hquantlib
