@@ -15,8 +15,6 @@ import           QuantLib.Stochastic.PureMT
 class RandomGenerator a where
   create :: IO a
   next   :: a -> (Double, a)
-  split  :: a -> (a, a)
-  split  = splitWithSeed 1
   splitWithSeed :: Integer -> a -> (a, a)
 
 instance RandomGenerator PureMT where
