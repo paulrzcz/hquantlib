@@ -4,11 +4,12 @@ module QuantLib.Stochastic.PureMT
   , newPureMT
   , randomDouble
   , splitMT
+  , splitMTwithSeed
   ) where
 
-import Data.Time.Clock
-import Data.Time.Calendar
-import System.CPUTime
+import           Data.Time.Calendar
+import           Data.Time.Clock
+import           System.CPUTime
 import qualified System.Random.Mersenne.Pure64 as P
 
 data PureMT = PureMT P.PureMT Integer
@@ -26,7 +27,10 @@ randomDouble (PureMT mt seed) = (r, PureMT newMt seed)
     (r, newMt) = P.randomDouble mt
 
 splitMT :: PureMT -> (PureMT, PureMT)
-splitMT mt@(PureMT _ seed) = (mt, PureMT newMt newSeed)
+splitMT = splitMTwithSeed 1
+
+splitMTwithSeed :: Integer -> PureMT -> (PureMT, PureMT)
+splitMTwithSeed addedSeed mt@(PureMT _ seed) = (mt, PureMT newMt newSeed)
   where
-    newSeed = seed + 1
+    newSeed = seed + addedSeed
     newMt = P.pureMT $ fromIntegral newSeed

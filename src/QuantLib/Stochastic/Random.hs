@@ -10,17 +10,19 @@ module QuantLib.Stochastic.Random
 
 import           QuantLib.Math.InverseNormal
 
-import QuantLib.Stochastic.PureMT
+import           QuantLib.Stochastic.PureMT
 
 class RandomGenerator a where
   create :: IO a
   next   :: a -> (Double, a)
   split  :: a -> (a, a)
+  split  = splitWithSeed 1
+  splitWithSeed :: Integer -> a -> (a, a)
 
 instance RandomGenerator PureMT where
   create = newPureMT
   next   = randomDouble
-  split  = splitMT
+  splitWithSeed = splitMTwithSeed
 
 -- | Box-Muller method
 data BoxMuller a = BoxMuller {
@@ -47,13 +49,15 @@ class NormalGenerator a where
         ngGetNext :: a -> (Double, a)
         ngMkNew   :: a -> IO a
         ngSplit   :: a -> (a, a)
+        ngSplit   = ngSplitWithSeed 1
+        ngSplitWithSeed :: Integer -> a -> (a, a)
 
 instance RandomGenerator a => NormalGenerator (BoxMuller a) where
         ngMkNew _       = mkNormalGen
         ngGetNext = boxMullerGetNext
-        ngSplit  x   = (x { bmRng = rng1 }, x { bmRng = rng2 })
+        ngSplitWithSeed seed  x   = (x { bmRng = rng1 }, x { bmRng = rng2 })
           where
-              (rng1, rng2) = split (bmRng x)
+              (rng1, rng2) = splitWithSeed seed (bmRng x)
 
 boxMullerGetNext :: RandomGenerator a => BoxMuller a -> (Double, BoxMuller a)
 boxMullerGetNext (BoxMuller True _ rng) = (s1*ratio, BoxMuller {
@@ -92,6 +96,6 @@ instance RandomGenerator a => NormalGenerator (InverseNormal a) where
         ngMkNew _       = mkInverseNormal
         ngGetNext (InverseNormal rng)   = (inverseNormal x, InverseNormal newRng)
           where (x, newRng) = next rng
-        ngSplit (InverseNormal x) = (InverseNormal x1, InverseNormal x2)
+        ngSplitWithSeed seed (InverseNormal x) = (InverseNormal x1, InverseNormal x2)
           where
-            (x1, x2) = split x
+            (x1, x2) = splitWithSeed seed x
