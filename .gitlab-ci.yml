@@ -1,0 +1,12 @@
+image: haskell:8.0.2
+
+htests_build:
+  cache:
+    untracked: true
+    paths:
+      - .stack-work
+      - ___restore
+  script:
+    - mkdir -p `pwd`/___restore
+    - ln -s `pwd`/___restore /root/.stack
+    - stack --no-terminal build htests
