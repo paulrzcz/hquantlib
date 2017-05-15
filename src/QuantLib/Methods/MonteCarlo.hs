@@ -6,7 +6,7 @@ module QuantLib.Methods.MonteCarlo
         ) where
 
 import           Control.Monad               ()
--- import           Control.Parallel.Strategies
+import           Control.Parallel.Strategies
 import           QuantLib.Stochastic.Process
 import           QuantLib.Stochastic.Random
 
@@ -19,8 +19,8 @@ class PathPricer p => Summary m p | m->p where
 
 -- | Path generator is a stochastic path generator
 class PathGenerator m where
-        pgMkNew         :: m -> IO m
-        pgGenerate      :: m -> (Path, m)
+        pgMkNew         :: m->IO m
+        pgGenerate      :: Integer -> m->Path
 
 -- | Path pricer provides a price for given path
 class PathPricer m where
@@ -29,21 +29,17 @@ class PathPricer m where
 
 -- | Monte Carlo engine function
 monteCarlo :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->s
-monteCarlo (PathMonteCarlo s p g) size =
-        let (priced, _) = foldl pricing ([], g) [1..size]
-        in sSummarize s priced
-        where   pricing (!xs, gen) _ = let (path, g') = pgGenerate gen
-                                           !price = ppPrice p path
-                                       in (price : xs, g')
+monteCarlo (PathMonteCarlo s p g) size = sSummarize s priced
+  where
+        !priced = map pricing [1..size]
+        pricing seed = ppPrice p (pgGenerate (fromIntegral seed) g)
 
 -- | Monte Carlo engine function. Parallelized version
--- monteCarloParallel :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->s
--- monteCarloParallel (PathMonteCarlo s p g) size = do
---         priced <- mapM (const pricing) [1..size] `using` rpar
---         return $ sSummarize s priced
---         where   pricing = do
---                         !path <- pgGenerate g
---                         return $! ppPrice p path
+monteCarloParallel :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->s
+monteCarloParallel (PathMonteCarlo s p g) size = sSummarize s priced
+  where
+        !priced = map pricing [1..size] `using` rpar
+        pricing seed = ppPrice p (pgGenerate (fromIntegral seed) g)
 
 -- | Path-dependant Monte Carlo engine
 data PathMonteCarlo s p g =
@@ -67,6 +63,5 @@ instance (StochasticProcess sp, NormalGenerator b, Discretize d) => PathGenerato
         pgMkNew (ProcessGenerator start len process rnd d)       = do
                 newRnd <- ngMkNew rnd
                 return $! ProcessGenerator start len process newRnd d
-        pgGenerate pg@(ProcessGenerator start len sp b d) =
-          let (path, rng) = generatePath b d sp len start
-          in (path, pg {pgGenerator = rng})
+        pgGenerate seed (ProcessGenerator start len sp b d) = generatePath newB d sp len start
+          where (_, newB) = ngSplitWithSeed seed b

@@ -15,7 +15,7 @@
 # resolver:
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
-resolver: nightly-2017-02-03
+resolver: nightly-2017-05-15
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -41,7 +41,7 @@ packages:
 # (e.g., acme-missiles-0.3)
 extra-deps:
 # - HerbiePlugin-0.2.0.0
- - vector-0.12.0.0
+# - vector-0.12.0.0
 # - vector-binary-instances-0.2.3.4
 # - scientific-0.3.4.10
 # - integer-logarithms-1
