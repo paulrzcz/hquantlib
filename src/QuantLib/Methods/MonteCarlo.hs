@@ -20,7 +20,7 @@ class PathPricer p => Summary m p | m->p where
 -- | Path generator is a stochastic path generator
 class PathGenerator m where
         pgMkNew         :: m->IO m
-        pgGenerate      :: m->Path
+        pgGenerate      :: Integer -> m->Path
 
 -- | Path pricer provides a price for given path
 class PathPricer m where
@@ -31,15 +31,15 @@ class PathPricer m where
 monteCarlo :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->s
 monteCarlo (PathMonteCarlo s p g) size = sSummarize s priced
   where
-        !priced = map (const pricing) [1..size]
-        !pricing = ppPrice p (pgGenerate g)
+        !priced = map pricing [1..size]
+        pricing seed = ppPrice p (pgGenerate (fromIntegral seed) g)
 
 -- | Monte Carlo engine function. Parallelized version
 monteCarloParallel :: (Summary s p, PathGenerator g) => PathMonteCarlo s p g->Int->s
 monteCarloParallel (PathMonteCarlo s p g) size = sSummarize s priced
   where
-        !priced = map (const pricing) [1..size] `using` rpar
-        !pricing = ppPrice p (pgGenerate g)
+        !priced = map pricing [1..size] `using` rpar
+        pricing seed = ppPrice p (pgGenerate (fromIntegral seed) g)
 
 -- | Path-dependant Monte Carlo engine
 data PathMonteCarlo s p g =
@@ -69,5 +69,5 @@ instance (StochasticProcess sp, NormalGenerator b, Discretize d) => PathGenerato
         pgMkNew (ProcessGenerator start len process rnd d)       = do
                 newRnd <- ngMkNew rnd
                 return $! ProcessGenerator start len process newRnd d
-        pgGenerate (ProcessGenerator start len sp b d) = generatePath newB d sp len start
-          where (_, newB) = ngSplit b
+        pgGenerate seed (ProcessGenerator start len sp b d) = generatePath newB d sp len start
+          where (_, newB) = ngSplitWithSeed seed b
