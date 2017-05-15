@@ -57,6 +57,6 @@ main = do
         rng <- mkInverseNormal :: IO (InverseNormal PureMT)
         let pg      = ProcessGenerator start 1000 sp rng discrete
         let pmc     = PathMonteCarlo summary mmcp pg
-        let s = monteCarlo pmc 50000
+        let s = monteCarlo pmc 100000
         printMap s
         print (getHsSize s)
