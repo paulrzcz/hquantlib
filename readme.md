@@ -12,3 +12,5 @@ The latest version implements:
 6. Volatility estimators: simple local estimator, Garman-Klass simple sigma and Parkinson sigma.
 7. Copulas : Clayton, Max, Min, Ali-Mikhail-Haq and Farlie-Gumbel-Morgenstern
 
+# Version 0.0.4.0 #
+Monte Carlo engine has been moved to new Haskell-native RNG.

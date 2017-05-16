@@ -5,7 +5,7 @@ module Main where
 
 import           Control.Monad
 import           Data.List
-import qualified Data.Map                      as M
+import qualified Data.Map                    as M
 import           QuantLib.Methods.MonteCarlo
 import           QuantLib.Methods.Pricer     (MaxMinClosePricer (..))
 import           QuantLib.Stochastic
