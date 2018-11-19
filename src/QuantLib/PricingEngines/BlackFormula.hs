@@ -2,10 +2,10 @@ module QuantLib.PricingEngines.BlackFormula
         ( blackFormulaImpliedStdDev
         ) where
 
-import Data.Maybe
-import QuantLib.Options
-import Numeric.GSL.Root
-import Numeric.GSL.Special.Erf
+import           Data.Maybe
+import           Numeric.GSL.Root
+import           Numeric.GSL.Special.Erf
+import           QuantLib.Options
 
 blackFormulaImpliedStdDev :: OptionType->Double->Double->Double->Double->Double->Maybe Double->Double->Int->Maybe Double
 blackFormulaImpliedStdDev opType strike forward blackPrice discount displacement guess accuracy maxIter
@@ -21,6 +21,7 @@ blackFormulaImpliedStdDev opType strike forward blackPrice discount displacement
                 blackFunction           = blackImpliedStdDevHelper opType strike forward blackPrice displacement
                 ([stdDev], _)           = root DNewton accuracy maxIter blackFunction [realGuess]
 
+{-# ANN blackImpliedStdDevHelper "NoHerbie" #-}
 blackImpliedStdDevHelper :: OptionType-> Double-> Double-> Double-> Double-> [Double]-> [Double]
 blackImpliedStdDevHelper opType strike forward blackPrice displacement [x] =
         [max 0.0 result - blackPrice]

@@ -2,8 +2,8 @@ module QuantLib.Event
         (module QuantLib.Event
         ) where
 
-import QuantLib.Prices
-import QuantLib.Time.Date
+import           QuantLib.Prices
+import           QuantLib.Time.Date
 
 class Event a where
         evDate          :: a->Date
@@ -14,18 +14,18 @@ class Event a where
         evOccuredInclude event date = evDate event <= date
 
         evCompare :: a->a->Ordering
-        evCompare x y     
-                | evDate x == evDate y 		= EQ
-                | evDate x <= evDate y      	= LT
-                | otherwise                     = GT
+        evCompare x y
+                | evDate x == evDate y = EQ
+                | evDate x <= evDate y = LT
+                | otherwise            = GT
 
         evEqual :: a->a->Bool
         evEqual x y = evDate x == evDate y
 
 -- | Cash flows data type
 data CashFlow = CashFlow {
-        cfDate          :: Date,
-        cfAmount        :: Double
+        cfDate   :: Date,
+        cfAmount :: Double
         } deriving (Show)
 
 instance Event CashFlow where
@@ -40,12 +40,12 @@ instance Ord CashFlow where
 -- | Sequence of cash-flows
 type Leg        = [CashFlow]
 
-data Callability = Call { 
-        cPrice  :: CallPrice,
-        cDate   :: Date
+data Callability = Call {
+        cPrice :: CallPrice,
+        cDate  :: Date
         } | Put {
-        cPrice  :: CallPrice,
-        cDate   :: Date
+        cPrice :: CallPrice,
+        cDate  :: Date
         } deriving (Show)
 
 instance Event Callability where

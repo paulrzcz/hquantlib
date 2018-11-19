@@ -64,7 +64,7 @@ ulp = 2.220446049250313E-16
 
 -- | Computes the inverse cumulative standard normal distribution N(0, 1)
 inverseNormal ::  Double -> Double
-inverseNormal x 
+inverseNormal x
         | x < xlow      = inverseInLowerRegion z
         | x <= xhigh    = inverseInCentralRegion z
         | otherwise     = inverseInHigherRegion z
@@ -83,19 +83,21 @@ inverseRecovery x
                 tolerance       = 42*ulp
 {-# INLINE inverseRecovery #-}
 
+{-# ANN inverseInLowerRegion "NoHerbie" #-}
 inverseInLowerRegion ::  Double -> Double
 inverseInLowerRegion x = (((((c1*z+c2)*z+c3)*z+c4)*z+c5)*z+c6) / ((((d1*z+d2)*z+d3)*z+d4)*z+1.0)
         where   z      = sqrt (-2.0*log x)
 {-# INLINE inverseInLowerRegion #-}
 
+{-# ANN inverseInCentralRegion "NoHerbie" #-}
 inverseInCentralRegion ::  Double -> Double
 inverseInCentralRegion x = (((((a1*r+a2)*r+a3)*r+a4)*r+a5)*r+a6)*z / (((((b1*r+b2)*r+b3)*r+b4)*r+b5)*r+1.0)
         where   r       = z*z
                 z       = x - 0.5
 {-# INLINE inverseInCentralRegion #-}
 
+{-# ANN inverseInHigherRegion "NoHerbie" #-}
 inverseInHigherRegion ::  Double -> Double
 inverseInHigherRegion x =  -(((((c1*z+c2)*z+c3)*z+c4)*z+c5)*z+c6) / ((((d1*z+d2)*z+d3)*z+d4)*z+1.0)
         where   z       = sqrt (-2.0 * log (1.0 - x))
 {-# INLINE inverseInHigherRegion #-}
-

@@ -2,3 +2,6 @@ dist
 *.o
 *.hi
 *.tix
+.stack-work
+*.prof
+*.hp
