@@ -2,10 +2,11 @@ resolver: lts-12.19
 
 packages:
 - '.'
+- '../hquantlib-time'
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)
 extra-deps:
-- hquantlib-time-0.0.4.0
+# - hquantlib-time-0.0.4.0
 
 # Override default flag values for local packages and extra-deps
 flags: {}

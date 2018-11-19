@@ -37,7 +37,6 @@ library
                 QuantLib.PricingEngines
                 QuantLib.PricingEngines.BlackFormula
                 QuantLib.Quotes
-                QuantLib.Time
                 QuantLib.TimeSeries
                 QuantLib.Money
                 QuantLib.Math
@@ -59,8 +58,6 @@ library
                 QuantLib.Stochastic.Process
                 QuantLib.Stochastic.Random
                 QuantLib.Currency
-                QuantLib.Time.Date
-                QuantLib.Time.DayCounter
                 QuantLib.Math.InverseNormal
                 QuantLib.Stochastic.PureMT
 
