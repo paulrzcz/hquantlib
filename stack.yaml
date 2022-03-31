@@ -1,4 +1,4 @@
-resolver: lts-12.19
+resolver: lts-18.28
 
 packages:
 - '.'
@@ -6,7 +6,8 @@ packages:
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)
 extra-deps:
-- hquantlib-time-0.0.4.1
+- hquantlib-time-0.0.5.1
+- hmatrix-special-0.19.0.0
 
 # Override default flag values for local packages and extra-deps
 flags: {}
