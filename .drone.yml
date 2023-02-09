@@ -1,0 +1,12 @@
+type: docker
+kind: pipeline
+name: default
+
+environment:
+  GIT_SSL_NO_VERIFY: 'true'
+
+steps:
+  - name: build
+    image: fpco/stack-build:lts-18
+    commands:
+      - "stack build"
