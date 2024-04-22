@@ -5,3 +5,5 @@ dist
 .stack-work
 *.prof
 *.hp
+.DS_Store
+dist-newstyle
