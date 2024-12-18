@@ -9,5 +9,6 @@ steps:
   - name: build
     image: haskell:9.4.8-slim
     commands:
+      - "apt install libblas-dev liblapack-dev"
       - "cabal update"
       - "cabal build"
