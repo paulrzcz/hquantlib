@@ -7,6 +7,7 @@ environment:
 
 steps:
   - name: build
-    image: fpco/stack-build:lts-18
+    image: haskell:9.4.8-slim
     commands:
-      - "stack build"
+      - "cabal update"
+      - "cabal build"
