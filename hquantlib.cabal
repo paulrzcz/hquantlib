@@ -11,7 +11,7 @@ description:    HQuantLib is intended to be a functional style port of QuantLib 
 build-type:     Simple
 stability:      alpha
 homepage:       http://github.com/paulrzcz/hquantlib.git
-extra-doc-files: README.md, changelog.md
+extra-doc-files: readme.md, changelog.md
 
 
 source-repository head
