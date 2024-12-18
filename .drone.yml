@@ -10,6 +10,6 @@ steps:
     image: haskell:9.4.8-slim
     commands:
       - "apt update"
-      - "apt install libblas-dev liblapack-dev"
+      - "apt install -y libblas-dev liblapack-dev"
       - "cabal update"
       - "cabal build"
