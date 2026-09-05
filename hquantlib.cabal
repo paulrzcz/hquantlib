@@ -1,6 +1,6 @@
 cabal-version:  3.0
 name:           hquantlib
-version:        0.0.5.2
+version:        0.1.0.0
 license:        LGPL-3.0-only
 license-file:   LICENSE
 author:         Pavel Ryzhov
@@ -21,7 +21,7 @@ source-repository head
 source-repository this
         type:           git
         location:       https://github.com/paulrzcz/hquantlib.git
-        tag:            0.0.5.2
+        tag:            0.1.0.0
 
 flag optimize
         description : Enable optimizations for library and benchmarks
